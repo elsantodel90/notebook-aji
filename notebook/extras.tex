@@ -1,0 +1,127 @@
+% LaTeXar con :
+%  pdflatex notebook.tex
+% o bien,
+%  latex notebook.dvi
+%  dvipdfm notebook.dvi
+%
+%	" The PDF file may contain up to 25 pages of reference material, single-sided,
+%   letter or A4 size, with text and illustrations readable by a person with 
+%   correctable eyesight without magnification from a distance of 1/2 meter. "
+%
+\documentclass[10pt,landscape,twocolumn,a4paper,notitlepage]{article}
+\usepackage{hyperref}
+\usepackage[spanish, activeacute]{babel}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{listings}
+\usepackage{amssymb}
+
+%%% Márgenes
+\setlength{\columnsep}{0.25in}    % default=10pt
+\setlength{\columnseprule}{0.5pt}    % default=0pt (no line)
+
+\addtolength{\textheight}{2.3in}
+\addtolength{\topmargin}{-0.9in}     % ~ -0.5 del incremento anterior
+
+\addtolength{\textwidth}{1.1in}
+\addtolength{\oddsidemargin}{-0.55in} % -0.5 del incremento anterior
+
+\setlength{\headsep}{0.08in}
+\setlength{\parskip}{0in}
+\setlength{\headheight}{15pt}
+\setlength{\parindent}{0mm}
+
+%%% Encabezado y pie de página
+\pagestyle{fancy}
+\fancyhead[LO]{\leftmark\ -\ \rightmark}
+\fancyhead[C]{\textbf{PPP-UBA - Extras}}
+\fancyhead[RO]{P\'agina \thepage\ de \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyfoot{}
+
+%%% Configuración de Listings
+\lstloadlanguages{C++}
+\lstnewenvironment{code}
+	{%\lstset{	numbers=none, frame=lines, basicstyle=\small\ttfamily, }%
+	 \csname lst@SetFirstLabel\endcsname}
+	{\csname lst@SaveFirstLabel\endcsname}
+\lstset{% general command to set parameter(s)
+	language=C++, basicstyle=\small\ttfamily, keywordstyle=\slshape,
+	emph=[1]{tipo,usa}, emphstyle={[1]\sffamily\bfseries},	
+	morekeywords={tint,forn,forsn},
+	basewidth={0.47em,0.40em},
+	columns=fixed, fontadjust, resetmargins, xrightmargin=5pt, xleftmargin=15pt,
+	flexiblecolumns=false, tabsize=2, breaklines,	breakatwhitespace=false, extendedchars=true,
+	numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=9pt,
+	frame=l, framesep=3pt,
+}
+
+%%% Macros
+\def\nbtitle#1{\begin{Large}\begin{center}\textbf{#1}\end{center}\end{Large}}
+\def\nbsection#1{\section{#1}}
+\def\nbsubsection#1{\subsection{#1}}
+\def\nbcoment#1{\begin{small}\textbf{#1}\end{small}}
+
+\newcommand{\comb}[2]{\left( \begin{array}{c} #1 \\ #2 \end{array}\right)}
+
+\begin{document}
+
+\section{Cosas}
+\subsection{Problemas y algoritmos de secuenciamiento}
+1 Marco para problemas basicos\\
+Estas convenciones nos permiten definir un gran conjunto de problemas basicos de secuenciamiento. Un problema se denota con una terna $\alpha\vert\beta\vert\gamma$ donde $\alpha$ denota el ambiente de las maquinas, $\beta$ denota las restricciones y caracteristicas secundarias y $\gamma$ denota el criterio de optimalidad.\\
+1.1 Ambientes con una sola maquina\\
+En ambientes con una sola maquina $\alpha = 1$\\
++ Las tareas se numeran de 1 a n.\\
++ Cada tarea j tiene un tiempo de procesamiento p[j].\\
++ En un secuenciamiento S denominamos tiempo de terminacion de la tarea j en S como C[S][j].\\
++ Cada tarea j puede tener un tiempo mas temprano de procesamiento r[j] antes del cual no puede empezar a procesarse.\\
++ Cada tarea j puede tener un tiempo mas tardio de entrega dj a partir del cual es perjudicial que se extienda su procesamiento.\\
+\\
+Entre las distintas restricciones y caracteristicas secundarias tenemos:\\
+\\
+1. Interrupciones. Cada tarea j puede ser procesada sin que se permitan interrupciones o permitiendose interrupciones ($\beta$ = pmtn).\\
+2. Tiempos de comienzo. Restricciones de tiempo de comienzo de cada tarea ($\beta =$ r[j]) dan los tiempos mas tempranos en que las tareas pueden ser comenzadas.\\
+3. Restricciones de precedencia. Las restricciones de precedencia entre tareas ($\beta =$ prec) indican que algunas tareas necesitan que otras esten terminadas para empezar a procesarse.\\
+\\
+Entre los diferentes criterios de optimalidad tenemos:\\
+1. Menor promedio de tiempo de terminacion (1/n) sum(j=1..n) C[S][j]. Notar que optimizar eso es equivalente a optimizar sum(j=1..n)C[S][j]\\
+2. Menor makespan $C^{S}_{j} = max_{j}C_{j}^{S}$\\
+3. Menor promedio de pesado de tiempo de terminacion (1/n) sum(j=1..n)w[j]C[j], denotado como sum w[j]C[j].\\
+4. Menor maximo retraso. Cada tarea puede tener asociada una fecha d[j] en la cual deba terminarse su procesamiento. Definimos como retraso L[j] de una tarea j en un secuenciamiento S a L[j] = C[S][j] - d[j]. Estaremos interesados en construir secuenciamientos que minimicen L[max] = max(j=1..n)L[j], la mayor demora de alguna tarea en la secuencia.\\
+5. Maximo numero de tareas completadas sin retraso. Se define para un secuenciamiento S a U[j] = 0 si C[S][j] <=d[j] y U[j] = 1 en otro caso. Los criterios pueden ser minimizar sum U[j] o mas en general minimizar sum w[j]U[j].\\
+6. Criterio de optimalidad general. Para cada tarea j, sea f[j](t) una funcion no decreciente del tiempo de ejecucion de la tarea con respecto a un secuenciamiento S. Definimos f[max] = max(j=1..n) f[j](C[S][j]).\\
+\\
+1.2 Ambientes con varias maquinas\\
+1.2.1 Ambientes paralelos\\
+En este ambiente tenemos varias maquinas m. Una tarea j con un requerimiento de procesamiento pj puede procesarse en cualquiera de estas maquinas o, si se admiten interrupciones, empezar en una maquina, interrumpir su procesamiento y continuar en otra maquina. Una maquina puede procesar a lo sumo una tarea por vez y una tarea puede ser procesada por a lo sumo una maquina a la vez.\\
+1. Maquinas paralelas identicas,$\alpha$ = P Cada tarea j requiere p[j] unidades de procesamiento al ser procesada en cualquier maquina. \\
+2. Maquinas uniformemente relacionadas, $\alpha$ = Q En este ambiente cada maquina i tiene una velocidad s[i] $>$ 0, luego si la tarea j se procesa completamente en la ma quina i, tendra un tiempo total de procesamiento en la maquina i. Definimos p[i,j] $=$ p[j] / s[i,j].\\
+\\
+1.2.2 Ambientes de produccion en serie\\
+Modelizan ambientes de produccion donde cada operacion debe procesarse en una maquina diferente. Nuevamente tenemos m maquinas. Diferentes operaciones pueden tardar tiempos diferentes. En general en estos ambientes cada tarea suele procesarse una vez en cada maquina, siendo estas todas diferentes.\\
+1. Open Shop, $\alpha$ = O Las operaciones sobre cada tarea pueden procesarse en cualquier orden, mientras dos operaciones no se procesen en maquinas diferentes simultaneamente.\\
+puede comenzarse hasta que su ppredecesora en el orden total ha finalizado.\\
+3. Flow Shop, $\alpha$ = F Es un caso particular del Job Shop donde el orden de las operaciones es el mismo para todas las tareas.\\
+2 Problemas y algoritmos polinomiales\\
+1. 1||sum C[j]\\
+Algoritmo Shortest Processing Time (SPT): secuenciar en orden no decreciente de tiempos de procesamiento p[j].\\
+2. 1||sum w[j]C[j]\\
+Algoritmo Shortest Processing time(SPT): secuenciar en orden no decreciente de p[j] / w[j].\\
+3. 1||L[max]\\
+Algoritmo Earliest Due Date (EDD): ordenar las tareas en orden no decreciente de fechas de terminacion d[j], y secuenciar en ese orden.\\
+4. 1|rj,pmtm|L[max]\\
+Algoritmo EDD es exacto.\\
+5. 1|rj,pmtm|sum C[j]\\
+Algoritmo Shortest Remaining Processing Time (SRPT): en cada instante de tiempo, secuenciar la tarea con menor tiempo de procesamiento restante, interrumpiendo cuando tareas de menor tiempo de procesamiento comienzan a estar disponibles para su procesamiento por que t>=r[j].\\
+Nota: 1|rj,pmtm|sum w[j]C[j] es NP-Hard.\\
+6. F2||C[max]\\
+Algoritmo Johnson rule: la idea intuitiva es procesar lo mas rapido posible en la primera maquina minimizar el tiempo que la segunda maquina esta ociosa esperando trabajos de la primera, esto sugiere una regla SPT. Por otro lado sera util procesar las tareas con mayor tiempo de procesamiento en la segunda maquina lo antes posible para minimizar la cola de tareas en la segunda maquina una vez que la primera termino de procesar, esto sugiere una regla de tipo longest processing time (LPT).\\
+Sean (a[j],b[j]) los tiempos de procesamiento de cada operacion. Particionamos las tareas en dos conjuntos. A es el conjunto de tareas para las cuales a[j] <= b[j], mientras que B es el conjunto para las cuales a[j] > b[j]. Construimos una secuencia ordenando las tareas de A por orden no decreciente de a[j] y luego todas las tareas de B por orden no creciente de b[j]. Se procesan las tareas en ambas maquinas en ese orden.\\
+Nota: Fn||C[max] con n>2 es NP-Hard.\\
+7. P|pmtm|C[max] con a lo sumo m - 1 interrupciones\\
+Algoritmo McNaughton's wrap-around rule: Daremos una secuencia de largo D = max (sum p[j]/m, max[j])\\
+Secuenciar las tareas en orden arbitrario llenando la maquina i hasta tiempo D antes de empezar a llenar la maquina i+1. Una tarea de tiempo de procesamiento p[j] puede interrumpirse asignando las ultimas t unidades a la maquina i y las primeras p[j] - t a la maquina i+1 para algun t. Como no hay mas de mD unidades de procesamiento se ha creado una sequencia optima.\\
+Nota: P||C[max] y O||C[max] son NP-hard.\\
+Algoritmo goloso incremental Least-Cost-Last: sea p(J) = sum(j pert J) p[j] el tiempo total de procesamiento de la secuencia de tareas. Alguna tarea debe completarse en tiempo p(J). Encontramos la tarea j que minimiza f[j](p(J)) y la ponemos ultima. Luego secuenciamos recursivamente las restantes tareas antes que j de manera de minimizar la penalidad maxima.\\
+\end{document}

@@ -1,0 +1,3192 @@
+% LaTeXar con :
+%  pdflatex notebook.tex
+% o bien,
+%  latex notebook.dvi
+%  dvipdfm notebook.dvi
+%
+%	" The PDF file may contain up to 25 pages of reference material, single-sided,
+%   letter or A4 size, with text and illustrations readable by a person with
+%   correctable eyesight without magnification from a distance of 1/2 meter. "
+%
+\documentclass[10pt,landscape,twocolumn,a4paper,notitlepage]{article}
+\usepackage{hyperref}
+\usepackage[spanish, activeacute]{babel}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{listings}
+\usepackage{amssymb}
+\usepackage{svnkw}
+\usepackage{rotating}
+
+\svnidlong{$HeadURL: http://tpsh.exp.dc.uba.ar/svn/adeymo-acm/notebook/notebook.tex $}{$LastChangedDate: 2011-08-13 01:12:48 -0300 (sÃ¡b, 13 ago 2011) $}{$LastChangedRevision: 59 $}{$LastChangedBy: elsantodel90 $}
+\def\revision{\svnrev}
+
+%%% Márgenes
+\setlength{\columnsep}{0.25in}    % default=10pt
+\setlength{\columnseprule}{0.5pt}    % default=0pt (no line)
+
+\addtolength{\textheight}{2.35in}
+\addtolength{\topmargin}{-0.9in}     % ~ -0.5 del incremento anterior
+
+\addtolength{\textwidth}{1.1in}
+\addtolength{\oddsidemargin}{-0.60in} % -0.5 del incremento anterior
+\setlength{\headwidth}{\textwidth}
+\addtolength{\headwidth}{0.1in}
+
+\setlength{\headsep}{0.08in}
+\setlength{\parskip}{0in}
+\setlength{\headheight}{15pt}
+\setlength{\parindent}{0mm}
+
+%%% Encabezado y pie de página
+\pagestyle{fancy}
+\fancyhead[LO]{\leftmark\ -\ \rightmark}
+%\fancyhead[C]{\textbf{AJI-UBA}}
+\fancyhead[RO]{\textbf{AJI-UBA} - rev \revision\ - P\'agina \thepage\ de \pageref{LastPage}\ \begin{rotate}{270}\hspace{.8em}\underline{\textbf{Universidad de Buenos Aires - FCEN -- AJI}\hspace{4.1in}\ }\end{rotate}}
+\fancyfoot{}
+\fancyfoot[RO]{\begin{rotate}{270}\hspace{-10em}\textbf{Page \thepage\ of \pageref{LastPage}}\end{rotate}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand{\footruleskip}{0.2in}
+
+%%% Configuración de Listings
+\lstloadlanguages{C++}
+\lstnewenvironment{code}
+	{%\lstset{	numbers=none, frame=lines, basicstyle=\small\ttfamily, }%
+	 \csname lst@SetFirstLabel\endcsname}
+	{\csname lst@SaveFirstLabel\endcsname}
+\lstset{% general command to set parameter(s)
+	language=C++, basicstyle=\small\ttfamily, keywordstyle=\slshape,
+	emph=[1]{tipo,usa}, emphstyle={[1]\sffamily\bfseries},
+	morekeywords={tint,forn,forsn},
+	basewidth={0.47em,0.40em},
+	columns=fixed, fontadjust, resetmargins, xrightmargin=5pt, xleftmargin=15pt,
+	flexiblecolumns=false, tabsize=2, breaklines,	breakatwhitespace=false, extendedchars=true,
+	numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=9pt,
+	frame=l, framesep=3pt,
+}
+
+%%% Macros
+\def\nbtitle#1{\begin{Large}\begin{center}\textbf{#1}\end{center}\end{Large}}
+\def\nbsection#1{\section{#1}}
+\def\nbsubsection#1{\subsection{#1}}
+\def\nbcoment#1{\begin{small}\textbf{#1}\end{small}}
+
+\newcommand{\comb}[2]{\left( \begin{array}{c} #1 \\ #2 \end{array}\right)}
+
+\begin{document}
+
+\tableofcontents\newpage
+
+%%% El texto propiamente dicho
+\nbtitle{AJI-UBA - Reference}
+\section{Algoritmos}
+\textbf{\#include $<$algorithm$>$ \#include $<$numeric$>$ \\}
+\begin{tabular}{|l|l|l|} \hline
+\textbf{Algo} & \textbf{Params} &  \textbf{Funcion} \\  \hline
+%swap & e1, e2 &  da vuelta e1,e2 & $1$ \\ \hline
+sort, stable\_sort & f, l &  ordena el intervalo \\  \hline
+partial\_sort & f, m, l, [cmp] & [f,m) son los m-f menores en orden, \\ && [m,l) es el resto en algun orden \\ \hline
+%is\_sorted & f, l &  \textit{bool} si esta ordenado \\  \hline
+nth\_element & f, nth, l & \textit{void} ordena el n-esimo, y \\ && particiona el resto \\  \hline
+fill, fill\_n & f, l / n, elem & \textit{void} llena [f, l) o [f, \\ && f+n) con elem \\  \hline
+lower\_bound, upper\_bound & f, l, elem & \textit{it} al primer / ultimo donde se \\ && puede insertar elem para que\\ && quede ordenada \\  \hline
+binary\_search & f, l, elem & \textit{bool} esta elem en [f, l) \\  \hline
+copy & f, l, resul & hace resul+$i$=f+$i$ $\forall i$ \\  \hline
+find, find\_if, find\_first\_of & f, l, elem & \textit{it} encuentra i $\in$[f,l) tq. i$=$elem, \\ & / pred / f2, l2 & pred(i), i$\in$[f2,l2) \\ \hline
+count, count\_if & f, l, elem/pred & cuenta elem, pred(i) \\ \hline
+search & f, l, f2, l2 & busca [f2,l2) $\in$ [f,l) \\ \hline
+replace, replace\_if & f, l, old & cambia old / pred(i) por new \\ & / pred, new & \\ \hline
+reverse & f, l & da vuelta \\ \hline
+partition, stable\_partition & f, l, pred & pred(i) ad, !pred(i) atras \\ \hline
+%min, max & e1, e2 & men / may & $1$ \\ \hline
+min\_element, max\_element & f, l, [comp] & \textit{it} min, max de [f,l] \\ \hline
+lexicographical\_compare & f1,l1,f2,l2 & \textit{bool} con [f1,l1]<[f2,l2] \\ \hline
+next/prev\_permutation & f,l & deja en [f,l) la perm sig, ant \\ \hline
+set\_intersection, & f1, l1, f2, l2, res & [res, $\ldots$) la op. de conj\\
+set\_difference, set\_union, & & \\
+set\_symmetric\_difference, & & \\ \hline
+push\_heap, pop\_heap, & f, l, e / e / & mete/saca e en heap [f,l), \\
+make\_heap & & hace un heap de [f,l) \\ \hline
+is\_heap & f,l & \textit{bool} es [f,l) un heap \\ \hline
+accumulate & f,l,i,[op] & \textit{T} $=$ $\sum$/oper de [f,l) \\ \hline
+inner\_product & f1, l1, f2, i & \textit{T} $=$ i $+$ [f1, l1) . [f2, $\ldots$ ) \\ \hline
+partial\_sum & f, l, r, [op] & r+i = $\sum$/oper de [f,f+i] $\forall i \in$[f,l) \\ \hline
+adjacent\_difference & f, l, r, [op] & r[0]=f[0], r[i]=f[i] - f[i-1] $\forall i \in$[1,l-f) \\ \hline
+%power & e, i, op & \textit{T} = $e^{n}$\\ \hline
+\end{tabular}
+
+\section{Estructuras}
+\subsection{Range Minimum Query $\left<n \log n, 1\right>$ (get)}
+\nbcoment{Resrtricci'on: $n < 2^{\mathrm{LVL}}$; mn(i, j) incluye i y \textbf{no} incluye j; mn\_init O(n log n)}
+\begin{code}
+usa: tipo
+#define LVL 10
+tipo vec[LVL][1<<LVL];
+tipo mn(int i, int j) { // intervalo [i,j)
+	int p = 31-__builtin_clz(j-i);
+	return min(vec[p][i],vec[p][j-(1<<p)]);
+}
+void mn_init(int n) {
+	int mp = 31-__builtin_clz(n);
+	forn(p, mp) forn(x, n-(1<<p)) vec[p+1][x] = min(vec[p][x], vec[p][x+(1<<p)]);
+}
+\end{code}
+\subsection{Range Minimum Query $\left<n, \log n\right>$ (get y set)}
+\nbcoment{Uso: \texttt{MAXN} es la cantidad m'axima de elementos que se banca la estructura. pget(i, j) incluye i y \textbf{no} incluye j. init(n) O(n). Funciona con cualquier operador ``+'' asociativo y con elemento neutro ``0'' Se inicializa as'i:}
+\verb!cin >> n; tipo* v = rmq.init(n); forn(i, n) cin >> v[i]; rmq.updall();!
+\begin{code}
+#define MAXN 100000
+struct rmq {
+	int MAX;
+	tipo vec[4*MAXN];
+	tipo* init(int n) {
+		MAX = 1 << (32-__builtin_clz(n)); 
+		fill(vec, vec+2*MAX, 0); // 0 = elemento neutro
+		return vec+MAX;
+	}
+	void updall() { dforn(i, MAX) vec[i] = vec[2*i] + vec[2*i+1]; } // + = operacion
+	void pset(int i, tipo vl) {
+		vec[i+=MAX] = vl;
+		while(i) { i /= 2; vec[i] = vec[2*i] + vec[2*i+1]; } // + = operacion
+	}
+	tipo pget(int i, int j) { return _pget(i+MAX, j+MAX); }
+	tipo _pget(int i, int j) {
+		tipo res = 0;             // 0 = elemento neutro
+		if (j-i <= 0) return res;
+		if (i%2) res += vec[i++]; // + = operación
+		res += _pget(i/2, j/2);   // + = operación
+		if (j%2) res += vec[--j]; // + = operación
+		return res;
+	}
+};
+\end{code}
+%
+\subsection{Cantidad de menores o iguales en O(log n)}
+\begin{code}
+//insersion y consulta de cuantos <= en log n
+struct leqset {
+   int maxl; vector<int> c;
+   int pref(int n, int l) { return (n>>(maxl-l))|(1<<l); }
+   void ini(int ml) { maxl=ml; c=vector<int>(1<<(maxl+1)); }
+   //inserta c copias de e, si c es negativo saca c copias
+   void insert(int e, int q=1) { forn(l,maxl+1) c[pref(e,l)]+=q; }
+   int leq(int e) {
+      int r=0,a=1;
+      forn(i,maxl) {
+         a<<=1; int b=(e>>maxl-i-1)&1;
+         if (b) r+=c[a]; a|=b;
+      } return r + c[a]; //sin el c[a] da los estrictamente menores
+   }
+   int size() { return c[1]; }
+   int count(int e) { return c[e|(1<<maxl)]; }
+};
+\end{code}
+\subsection{Suffix Array - Longuest Common Prefix}
+\begin{code}
+typedef unsigned char xchar;
+#define MAXN 1000000
+
+int p[MAXN], r[MAXN], t, n;
+
+bool sacmp(int a, int b) { return p[(a+t)%n] < p[(b+t)%n]; }
+void bwt(const xchar *s, int nn) {
+	n = nn;
+	int bc[256];
+	memset(bc, 0, sizeof(bc));
+	forn(i, n) ++bc[s[i]];
+	forn(i, 255) bc[i+1]+=bc[i];
+	forn(i, n) r[--bc[s[i]]]=i;
+	forn(i, n) p[i]=bc[s[i]];
+	
+	int lnb,nb = 1;
+	for(t = 1; t < n; t*=2) {
+		lnb = nb; nb = 0;
+		for(int i = 0, j = 1; i < n; i = j++) {
+			/*calcular siguiente bucket*/
+			while(j < n && p[r[j]] == p[r[i]]) ++j;
+			if (j-i > 1) {
+				sort(r+i, r+j, sacmp);
+				int pk, opk = p[(r[i]+t)%n];
+				int q = i, v = i;
+				for(; i < j; i++) {
+					if (((pk = p[(r[i]+t)%n]) != opk) && !(q <= opk && pk < j)) { opk = pk; v = i; }
+					p[r[i]] = v;
+				}
+			}
+			nb++;
+		}
+		if (lnb == nb) break;
+	}
+//	prim = p[0];
+}
+
+void lcp(const xchar* s, int* h) { /* h could be over r */
+	int q = 0, j;
+	forn(i,n) if (p[i]) {
+		j = r[p[i]-1];
+		while(q < n && s[(i+q)%n] == s[(j+q)%n]) ++q;
+		h[p[i]-1] = q;
+		if (q > 0) --q;
+	}
+}
+\end{code}
+\newpage
+%----------------------------------------------------------------------%
+\section{Geom}\subsection{Point in Poly}\begin{code}
+usa: algorithm, vector
+// No se porta bien si le preguntas por un punto que esta justo en la frontera del poligono
+struct pto { tipo x,y; };
+bool pnpoly(vector<pto>&v,pto p){
+  unsigned i, j, mi, mj, c = 0;
+  for(i=0, j = v.size()-1; i< v.size(); j = i++){
+    if((v[i].y<=p.y && p.y<v[j].y) ||
+       (v[j].y<=p.y && p.y<v[i].y)){
+      mi=i,mj=j; if(v[mi].y>v[mj].y)swap(mi,mj);
+      if((p.x-v[mi].x) * (v[mj].y-v[mi].y)
+       < (p.y-v[mi].y) * (v[mj].x-v[mi].x)) c^=1;
+    }
+  } return c;
+}
+\end{code}\subsection{Convex Hull}\begin{code}
+usa: algorithm, vector, sqr
+tipo pcruz(tipo x1,tipo y1,tipo x2,tipo y2){return x1*y2-x2*y1;}
+struct pto {
+  tipo x,y;
+  tipo n2(pto &p2)const{
+    return sqr(x-p2.x)+sqr(y-p2.y);
+  }
+} r;
+tipo area3(pto a, pto b, pto c){
+  return pcruz(b.x-a.x,b.y-a.y,c.x-a.x,c.y-a.y);
+}
+bool men2(const pto &p1, const pto &p2){
+  return (p1.y==p2.y)?(p1.x<p2.x):(p1.y<p2.y);
+}
+bool operator<(const pto &p1,const pto &p2){
+  tipo ar = area3(r,p1,p2);
+  return(ar==0)?(p1.n2(r)<p2.n2(r)):ar>0;
+  //< clockwise, >counterclockwise
+}
+typedef vector<pto> VP;
+VP chull(VP & l){
+  VP res = l;  if(l.size()<3) return res;
+  r = *(min_element(res.begin(),res.end(),men2));
+  sort(res.begin(),res.end());
+  tint i=0;VP ch;ch.push_back(res[i++]);ch.push_back(res[i++]);
+  while(i<res.size())  // area3 > clockwise, < counterclockwise
+    if(ch.size()>1 && area3(ch[ch.size()-2],ch[ch.size()-1],res[i])<=0)
+      ch.pop_back();
+    else
+      ch.push_back(res[i++]);
+  return ch;
+}
+\end{code}
+\subsection{Circulo m\'inimo}
+\begin{code}
+usa: algorithm, cmath, vector, pto (con < e ==)
+usa: sqr, dist2(pto,pto), tint
+typedef double tipo;
+typedef vector<pto> VP;
+struct circ { tipo r; pto c; };
+#define eq(a,b) (fabs(a-b)<0.00000000000001)
+circ deIni(VP v){ //l.size()<=3
+  circ r;  sort(v.begin(), v.end()); unique(v.begin(), v.end());
+  switch(v.size()) {
+    case 0: r.c.x=r.c.y=0; r.r = -1; break;
+    case 1: r.c=v[0]; r.r=0; break;
+    case 2: r.c.x=(v[0].x+v[1].x)/2.0;
+        r.c.y=(v[0].y+v[1].y)/2.0;
+        r.r=dist2(v[0], r.c); break;
+    default: {
+      tipo A = 2.0 * (v[0].x-v[2].x);tipo B = 2.0 * (v[0].y-v[2].y);
+      tipo C = 2.0 * (v[1].x-v[2].x);tipo D = 2.0 * (v[1].y-v[2].y);
+      tipo R = sqr(v[0].x)-sqr(v[2].x)+sqr(v[0].y)-sqr(v[2].y);
+      tipo P = sqr(v[1].x)-sqr(v[2].x)+sqr(v[1].y)-sqr(v[2].y);
+      tipo det = D*A-B*C;
+      if(eq(det, 0)) {swap(v[1],v[2]); v.pop_back(); return deIni(v);}
+      r.c.x = ( D*R-B*P)/det;
+      r.c.y = (-C*R+A*P)/det;
+      r.r = dist2(v[0],r.c);
+    }
+  }
+  return r;
+}
+circ minDisc(VP::iterator ini,VP::iterator fin,VP& pIni){
+  VP::iterator ivp;
+  int i,cantP=pIni.size();
+  for(ivp=ini,i=0;i+cantP<2 && ivp!=fin;ivp++,i++) pIni.push_back(*ivp);
+  circ r = deIni(pIni);
+  for(;i>0;i--) pIni.pop_back();
+  for(;ivp!=fin;ivp++) if (dist2(*ivp, r.c) > r.r){
+    pIni.push_back(*ivp);
+    if (cantP<2) r=minDisc(ini,ivp,pIni);
+    else r=deIni(pIni);
+    pIni.pop_back();
+  }
+  return r;
+}
+circ minDisc(VP ps){ //ESTA ES LA QUE SE USA
+  random_shuffle(ps.begin(),ps.end()); VP e;
+  circ r = minDisc(ps.begin(),ps.end(),e);
+  r.r=sqrt(r.r); return r;
+};
+\end{code}
+\subsection{M\'aximo rect\'angulo entre puntos}
+\begin{code}
+usa: vector, map, algorithm
+struct pto {
+  tint x,y ;bool operator<(const pto&p2)const{
+    return (x==p2.x)?(y<p2.y):(x<p2.x);
+  }
+};
+bool us[10005];
+vector<pto> v;
+tint l,w;
+tint maxAr(tint x, tint y,tint i){
+  tint marea=0;
+  tint arr=0,aba=w;
+  bool partido = false;
+  for(tint j=i;j<(tint)v.size();j++){
+    if(x>=v[j].x)continue;
+    tint dx = (v[j].x-x);
+    if(!partido){
+      tint ar = (aba-arr) * dx;marea>?=ar;
+    } else {
+      tint ar = (aba-y) * dx;marea>?=ar;
+      ar = (y-arr) * dx;marea>?=ar;
+    }
+    if(v[j].y==y)partido=true;
+    if(v[j].y< y)arr>?=v[j].y;
+    if(v[j].y> y)aba<?=v[j].y;
+  }
+  return marea;
+}
+tint masacre(){
+  fill(us,us+10002,false);
+  pto c;c.x=0;c.y=0;v.push_back(c);c.x=l;c.y=w;v.push_back(c);
+  tint marea = 0;
+  sort(v.begin(),v.end());
+  for(tint i=0;i<(tint)v.size();i++){
+    us[v[i].y]=true;
+    marea>?=maxAr(v[i].x,v[i].y,i);
+  }
+  for(tint i=0;i<10002;i++)if(us[i])marea>?=maxAr(0,i,0);
+  return marea;
+}
+\end{code}
+\subsection{M\'axima cantidad de puntos alineados}
+\begin{code}
+usa: algorithm, vector, map, set, forn, forall(typeof)
+struct pto {
+  tipo x,y;
+  bool operator<(const pto &o)const{
+    return (x!=o.x)?(x<o.x):(y<o.y);
+  }
+};
+struct lin{
+  tipo a,b,c;//ax+by=c
+  bool operator<(const lin& l)const{
+    return a!=l.a?a<l.a:(b!=l.b?b<l.b:c<l.c);
+  }
+};
+typedef vector<pto> VP;
+tint mcd(tint a, tint b){return (b==0)?a:mcd(b, a%b);}
+lin linea(tipo x1, tipo y1, tipo x2, tipo y2){
+  lin l;
+  tint d = mcd(y2-y1, x1-x2);
+  l.a = (y2-y1)/d;
+  l.b = (x1-x2)/d;
+  l.c = x1*l.a + y1*l.b;
+  return l;
+}
+VP v;
+typedef map<lin, int> MLI;
+MLI cl;
+tint maxLin(){
+  cl.clear();
+  sort(v.begin(), v.end());
+  tint m=1, acc=1;
+  forn(i, ((tint)v.size())-1){
+    acc=(v[i]<v[i+1])?1:(acc+1);
+    m>?=acc;
+  }
+  forall(i, v){
+    set<lin> este;
+    forall(j, v){
+    if(*i<*j||*j<*i)
+      este.insert(linea(i->x, i->y, j->x, j->y));
+    }
+    forall(l, este)cl[*l]++;
+  }
+  forall(l, cl){
+    m>?= l->second;
+  }
+  return m;
+}
+\end{code}
+%\newpage
+\subsection{Centro de masa y area de un pol\'igono}
+\begin{code}
+usa: vector, forn
+struct pto { tint x,y; };
+typedef vector<pto> poly;
+tint pcruz(tint x1, tint y1, tint x2, tint y2) { return x1*y2-x2*y1; }
+tint area3(const pto& p, const pto& p2, const pto& p3) {
+  return pcruz(p2.x-p.x, p2.y-p.y, p3.x-p.x, p3.y-p.y);
+}
+tint areaPor2(const poly& p) {
+  tint a = 0; tint l = p.size()-1;
+  forn(i,l-1) a += area3(p[i], p[i+1], p[l]);
+  return abs(a);
+}
+pto bariCentroPor3(const pto& p1, const pto& p2, const pto& p3) {
+  pto r;
+  r.x = p1.x+p2.x+p3.x; r.y = p1.y+p2.y+p3.y;
+  return r;
+}
+struct ptoD { double x,y; };
+ptoD centro(const poly& p) {
+  tint a = 0; ptoD r; r.x=r.y=0; tint l = p.size()-1;
+  forn(i,l-1) {
+    tint act = area3(p[i], p[i+1], p[l]);
+    pto pact = bariCentroPor3(p[i], p[i+1], p[l]);
+    r.x += act * pact.x; r.y += act * pact.y; a += act;
+  } r.x /= (3 * a); r.y /= (3 * a); return r;
+}
+\end{code}
+\subsection{Par de puntos mas cercano}
+\begin{code}
+usa algorithm, vector, tdbl, tint, tipo, INF, forn, cmath
+const tint MAX_N = 10010;
+struct pto { tipo x,y;} r;
+typedef vector<pto> VP;
+#define ord(n,a,b) bool n(const pto &p, const pto &q){ \
+  return ((p.a==q.a)?(p.b<q.b):(p.a<q.a));}
+#define sqr(a) ((a)*(a))
+ord(mx,x,y);
+ord(my,y,x);
+bool vale(const pto &p){return mx(p,r);};
+tipo dist(pto a,pto b){return sqr(a.x-b.x)+sqr(a.y-b.y);}
+pto vx[MAX_N];
+pto vy[MAX_N];
+tint N;
+tipo cpair(tint ini, tint fin){
+  if(fin-ini==1)return INF;
+  if(fin-ini==2)return dist(vx[ini], vx[ini+1]);
+  vector<pto> y(fin-ini);
+  copy(vy+ini, vy+fin, y.begin());
+  tint  m = (ini+fin)/2;
+  r = vx[m];
+  stable_partition(vy+ini, vy+fin, vale);
+  tipo d = min(cpair(ini, m), cpair(m, fin));
+  vector<pto> w;
+  forn(i, y.size())if(sqr(fabs(y[i].x-vx[m].x))<=d)w.push_back(y[i]);
+  forn(i,w.size()){
+    for(tint j=i+1;(j<(tint)w.size())
+      && sqr(fabs(w[i].y-w[j].y))<d;j++){
+      d<?=dist(w[i],w[j]);
+    }
+  }
+  return d;
+}
+tipo closest_pair(){
+  sort(vx, vx+N,mx);
+  sort(vy, vy+N,my);
+  for(tint i=1;i<N;i++){
+    if(vx[i].x==vx[i-1].x && vx[i].y==vx[i-1].y)return 0;
+  }
+  return sqrt(cpair(0,N));
+}
+\end{code}
+\subsection{CCW}
+\begin{code}
+struct point {tint x, y;};
+int ccw(const point &p0, const point &p1, const point &p2){
+    tint dx1, dx2, dy1, dy2;
+    dx1 = p1.x - p0.x; dy1 = p1.y - p0.y;
+    dx2 = p2.x - p0.x; dy2 = p2.y - p0.y;
+    if (dx1*dy2 > dy1*dx2) return +1;
+    if (dx1*dy2 < dy1*dx2) return -1;
+    if ((dx1*dx2 < 0) || (dy1*dy2 < 0)) return -1;
+    if ((dx1*dx1+dy1*dy1) < (dx2*dx2+dy2*dy2))return +1;
+    return 0;
+}
+\end{code}
+\subsection{Sweep Line}
+\begin{code}
+struct pto { tint x,y; bool operator<(const pto&p2)const{
+  return (y==p2.y)?(x<p2.x):(y<p2.y);
+}};
+struct slp{ tint x,y,i;bool f; bool operator<(const slp&p2)const{
+  if(y!=p2.y)return y<p2.y;
+  if(x!=p2.x)return x<p2.x;
+  if(f!=p2.f)return f;
+  return i<p2.i;
+}};
+slp p2slp(pto p,tint i){slp q;q.x=p.x;q.y=p.y;q.i=i;return q;}
+tint area3(pto a,pto b,pto c){
+  return (b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x);
+}
+tint giro(pto a,pto b,pto c){
+  tint a3=area3(a,b,c);
+  if(a3<0) return -1; if(a3>0)return 1;
+  return 0;
+}
+bool inter(pair<pto,pto> a, pair<pto,pto> b){
+  pto p=a.first,q=a.second,r=b.first,s=b.second;
+  if(q<p)swap(p,q);if(s<r)swap(r,s);
+  if(r<p){swap(p,r);swap(q,s);}
+  tint a1=giro(p,q,r),a2=giro(p,q,s);
+  if(a1!=0 || a2!=0){
+    return (a1!=a2) && (giro(r,s,p)!=giro(r,s,q));
+  } else {
+    return !(q<r);
+  }
+}
+tint cant_intersec(vector<pair<pto,pto> >&v){
+  tint ic=0;
+  set<slp> Q; list<tint> T;
+  for(tint i=0;i<(tint)v.size();i++){
+    slp p1=p2slp(v[i].first,i);slp p2=p2slp(v[i].second,i);
+    if(p2<p1)swap(p1,p2);
+    p1.f=true;p2.f=false;
+    Q.insert(p1);Q.insert(p2);
+  }
+  while(Q.size()>0){
+    slp p = *(Q.begin());Q.erase(p);
+    if(p.f){
+      for(list<tint>::iterator it=T.begin();it!=T.end();it++)
+        if(inter(v[*it],v[p.i]))ic++;
+      T.push_back(p.i);
+    } else {
+      T.erase(find(T.begin(),T.end(),p.i));
+    }
+  }
+  return ic;
+}
+\end{code}
+\subsection{Intersecci'on de segmentos}
+\begin{code}
+struct pto{tint x,y;};
+struct seg{pto f,s;};
+tint sgn(tint a){return (a>0LL) - (a<0LL);}
+tint pc(pto a, pto b, pto o){return (a.x-o.x)*(b.y-o.y)-(a.y-o.y)*(b.x-o.x);}
+tint pe(pto a, pto b, pto o){return (a.x-o.x)*(b.x-o.x)+(a.y-o.y)*(b.y-o.y);}
+bool inter(seg a, seg b){
+	tint bf = sgn(pc(a.f, a.s, b.f));
+	tint bs = sgn(pc(a.f, a.s, b.s));
+	tint af = sgn(pc(b.f, b.s, a.f));
+	tint as = sgn(pc(b.f, b.s, a.s));
+	if(bf*bs<0 && af*as<0) return true; //cruza sin tocar
+	if((bf==0 && pe(a.f,a.s,b.f) <= 0) || (bs==0 && pe(a.f,a.s,b.s) <= 0))return true; //b tiene un vertice en a
+	if((af==0 && pe(b.f,b.s,a.f) <= 0) || (as==0 && pe(b.f,b.s,a.s) <= 0))return true; //a tiene un vertice en b
+	return false;
+}
+\end{code}
+\subsection{Distancia entre segmentos}
+\begin{code}
+tdbl dist(pto p, seg s){
+	tdbl a = fabs(tdbl(pc(s.f, s.s, p)));
+	tdbl b = hypot(s.f.x-s.s.x,s.f.y-s.s.y),h=a/b, c = hypot(b, h);
+	tdbl d1 = hypot(s.f.x-p.x,s.f.y-p.y), d2 = hypot(s.s.x-p.x,s.s.y-p.y);
+	if(b<1e-10 || c <= d1 || c <= d2)return min(d1, d2); else return h;
+}
+tdbl dist(seg a, seg b){
+	return (inter(a, b))?0.0:min(min(dist(a.f, b), dist(a.s, b)), min(dist(b.f, a), dist(b.s, a)));
+}
+\end{code}
+\subsection{Cuentitas}
+\begin{code}
+usa: cmath, algorithm, tipo
+struct pto{tipo x,y;};
+struct lin{tipo a,b,c;};
+struct circ{pto c; tipo r;};
+#define sqr(a)((a)*(a))
+const double PI = (2.0 * acos(0.0));
+pto punto(tipo x, tipo y){pto r;r.x=x;r.y=y;return r;}
+const pto cero = punto(0,0);
+pto suma(pto o, pto s, tipo k){
+  return punto(o.x + s.x * k, o.y + s.y * k);
+}
+pto sim(pto p, pto c){return suma(c, suma(p,c,-1), -1);}
+pto ptoMedio(pto a, pto b){return punto((a.x+b.x)/2.0,(a.y+b.y)/2.0);}
+tipo pc(pto a, pto b, pto o){
+  return (b.y-o.y)*(a.x-o.x)-(a.y-o.y)*(b.x-o.x);
+}
+tipo pe(pto a, pto b, pto o){
+  return (b.x-o.x)*(a.x-o.x)+(b.y-o.y)*(a.y-o.y);
+}
+#define sqrd(a,b) (sqr(a.x-b.x)+sqr(a.y-b.y))
+tipo dist(pto a, pto b){return sqrt(sqrd(a,b));}
+//#define feq(a,b) (fabs((a)-(b))<0.000000000001) para interseccion
+#define feq(a,b) (fabs((a)-(b))<0.000000001)
+tipo zero(tipo t){return feq(t,0.0)?0.0:t;}
+bool alin(pto a, pto b, pto c){  return feq(0, pc(a,b,c));}
+bool perp(pto a1, pto a2, pto b1, pto b2){
+  return feq(0, pe(suma(a1, a2, -1.0), suma(b1, b2, -1.0), cero));
+}
+bool hayEL(tipo A11, tipo A12, tipo A21, tipo A22){
+  return !feq(0.0, A22*A11-A12*A21);
+}
+pto ecLineal(tipo A11, tipo A12, tipo A21, tipo A22, tipo R1, tipo R2){
+  tipo det = A22*A11-A12*A21;
+  return punto((A22*R1-A12*R2)/det,(A11*R2-A21*R1)/det);
+}
+lin linea(pto p1, pto p2){
+  lin l;
+  l.b = p2.x-p1.x;
+  l.a = p1.y-p2.y;
+  l.c = p1.x*l.a + p1.y*l.b;
+  return l;
+}
+bool estaPL(pto p, lin l){return feq(p.x * l.a + p.y * l.b, l.c);}
+bool estaPS(pto p, pto a, pto b){
+  return feq(dist(p,a)+dist(p,b),dist(b,a));
+}
+lin bisec(pto o, pto a, pto b){
+  tipo da = dist(a,o);
+  return linea(o, suma(a, suma(b,a,-1.0), da / (da+dist(b,o))));
+}
+bool paral(lin l1, lin l2){return !hayEL(l1.a, l1.b, l2.a, l2.b);}
+bool hayILL(lin l1, lin l2){ //!paralelas || misma
+  return !paral(l1,l2)|| !hayEL(l1.a, l1.c, l2.a, l2.c);
+}
+pto interLL(lin l1, lin l2){//li==l2->pincha
+  return ecLineal(l1.a, l1.b, l2.a, l2.b, l1.c, l2.c);
+}
+bool hayILS(lin l, pto b1, pto b2){
+  lin b = linea(b1,b2);
+  if(!hayILL(l,b))return false;
+  if(estaPL(b1,l))return true;
+  return estaPS(interLL(l,b), b1,b2);
+}
+pto interLS(lin l, pto b1, pto b2){
+  return interLL(l, linea(b1, b2));
+}
+pto interSS(pto a1, pto a2, pto b1, pto b2){
+  return interLS(linea(a1, a2), b1, b2);
+}
+bool hayISS(pto a1, pto a2, pto b1, pto b2){
+  if (estaPS(a1,b1,b2)||estaPS(a2,b1,b2)) return true;
+  if (estaPS(b1,a1,a2)||estaPS(b2,a1,a2)) return true;
+  lin a = linea(a1,a2), b = linea(b1, b2);
+  if(!hayILL(a,b))return false;
+  if(paral(a,b))return false;
+  pto i = interLL(a,b);
+  //sale(i);sale(a1);sale(a2);sale(b1);sale(b2);cout << endl;
+  return estaPS(i,a1, a2) && estaPS(i,b1,b2);
+}
+tipo distPL(pto p, lin l){
+  return fabs((l.a * p.x + l.b * p.y - l.c)/sqrt(sqr(l.a)+sqr(l.b)));
+}
+tipo distPS(pto p, pto a1, pto a2){
+  tipo aa = sqrd(a1, a2);
+  tipo d = distPL(p, linea(a1, a2));
+  tipo xx = aa+sqr(d);
+  tipo a1a1 = sqrd(a1, p);
+  tipo a2a2 = sqrd(a2, p);
+  if(max(a1a1, a2a2) > xx){
+    return sqrt(min(a1a1, a2a2));
+  }else{
+    return d;
+  }
+}
+//
+pto bariCentro(pto a, pto b, pto c){
+  return punto(
+    (a.x + b.x + c.x) / 3.0,
+    (a.y + b.y + c.y) / 3.0);
+}
+pto circunCentro(pto a, pto b, pto c){
+  tipo A = 2.0 * (a.x-c.x);tipo B = 2.0 * (a.y-c.y);
+  tipo C = 2.0 * (b.x-c.x);tipo D = 2.0 * (b.y-c.y);
+  tipo R = sqr(a.x)-sqr(c.x)+sqr(a.y)-sqr(c.y);
+  tipo P = sqr(b.x)-sqr(c.x)+sqr(b.y)-sqr(c.y);
+  return ecLineal(A,B,C,D,R,P);
+}
+pto ortoCentro(pto a, pto b, pto c){
+  pto A = sim(a, ptoMedio(b,c));
+  pto B = sim(b, ptoMedio(a,c));
+  pto C = sim(c, ptoMedio(b,a));
+  return circunCentro(A,B,C);
+}
+pto inCentro(pto a, pto b, pto c){
+  return interLL(bisec(a, b, c), bisec(b, a, c));
+}
+pto rotar(pto p, pto o, tipo s, tipo c){
+  //gira cw un angulo de sin=s, cos=c
+  return punto(
+    o.x + (p.x - o.x) * c + (p.y - o.y) * s,
+    o.y + (p.x - o.x) * -s + (p.y - o.y) * c
+  );
+}
+bool hayEcCuad(tipo a, tipo b, tipo c){//a*x*x+b*x+c=0 tiene sol real?
+  if(feq(a,0.0))return false;
+  return zero((b*b-4.0*a*c)) >= 0.0;
+}
+pair<tipo, tipo> ecCuad(tipo a, tipo b, tipo c){//a*x*x+b*x+c=0
+  tipo dx = sqrt(zero(b*b-4.0*a*c));
+  return make_pair((-b + dx)/(2.0*a),(-b - dx)/(2.0*a));
+}
+bool adentroCC(circ g, circ c){//c adentro de g sin tocar?
+  return g.r > dist(g.c, c.c) + c.r || !feq(g.r, dist(g.c, c.c) + c.r);
+}
+bool hayICL(circ c, lin l){
+  if(feq(0,l.b)){
+    swap(l.a, l.b);
+    swap(c.c.x, c.c.y);
+  }
+  if(feq(0,l.b))return false;
+  return hayEcCuad(
+    sqr(l.a)+sqr(l.b),
+    2.0*l.a*l.b*c.c.y-2.0*(sqr(l.b)*c.c.x+l.c*l.a),
+    sqr(l.b)*(sqr(c.c.x)+sqr(c.c.y)-sqr(c.r))+sqr(l.c)-2.0*l.c*l.b*c.c.y
+  );
+}
+pair<pto, pto> interCL(circ c, lin l){
+  bool sw=false;
+  if(sw=feq(0,l.b)){
+    swap(l.a, l.b);
+    swap(c.c.x, c.c.y);
+  }
+  pair<tipo, tipo> rc = ecCuad(
+    sqr(l.a)+sqr(l.b),
+    2.0*l.a*l.b*c.c.y-2.0*(sqr(l.b)*c.c.x+l.c*l.a),
+    sqr(l.b)*(sqr(c.c.x)+sqr(c.c.y)-sqr(c.r))+sqr(l.c)-2.0*l.c*l.b*c.c.y
+  );
+  pair<pto, pto> p(
+    punto(rc.first, (l.c - l.a * rc.first) / l.b),
+    punto(rc.second, (l.c - l.a * rc.second) / l.b)
+  );
+  if(sw){
+    swap(p.first.x, p.first.y);
+    swap(p.second.x, p.second.y);
+  }
+  return p;
+}
+bool hayICC(circ c1, circ c2){
+  lin l;
+  l.a = c1.c.x-c2.c.x;
+  l.b = c1.c.y-c2.c.y;
+  l.c = (sqr(c2.r)-sqr(c1.r)+sqr(c1.c.x)-sqr(c2.c.x)+sqr(c1.c.y)
+    -sqr(c2.c.y))/2.0;
+  return hayICL(c1, l);
+
+}
+pair<pto, pto> interCC(circ c1, circ c2){
+  lin l;
+  l.a = c1.c.x-c2.c.x;
+  l.b = c1.c.y-c2.c.y;
+  l.c = (sqr(c2.r)-sqr(c1.r)+sqr(c1.c.x)-sqr(c2.c.x)+sqr(c1.c.y)
+    -sqr(c2.c.y))/2.0;
+  return interCL(c1, l);
+}
+\end{code}
+\newpage
+\section{Grafos}%\subsection{Dijsktra}%
+\subsection{Kruskal \& Union-Find}
+\begin{code}
+usa: vector, utility, forn
+typedef pair< tint, pair<int,int> > eje;
+int n; vector<eje> ejes; //grafo n=cant nodos
+#define MAXN 100000
+int _cl[MAXN]; //empieza con todos en -1
+int cl(int i) { return (_cl[i] == -1 ? i : _cl[i] = cl(_cl[i])); }
+void join(int i, int j) { if(cl(i)!=cl(j)) _cl[cl(i)] = cl(j); }
+tint krus() {
+  if (n==1) return 0;
+  sort(ejes.begin(), ejes.end());
+  int u = 0; tint t = 0;
+  memset(_cl,-1,sizeof(_cl));
+  forn(i,ejes.size()) {
+    eje& e = ejes[i];
+    if (cl(e.second.first) != cl(e.second.second)) {
+      u++; t += e.first; if(u==n-1) return t;
+      join(e.second.first, e.second.second);
+    }
+  } return -1; //-1 es que no es conexo
+}
+\end{code}
+\subsection{Bellman-Ford}
+\begin{code}
+bool bellmanFord(int n){
+  int i,o,d;
+  static int dis[2*MAX+2];
+  fill(dis,dis+n,INF);
+  dis[ORIGEN]=0;
+  camino[ORIGEN]=0;
+  bool cambios=true;
+  for(i=0;i<n && cambios;i++){
+    cambios=false;
+    forn(o,n)forn(d,n){
+      if (dis[d]>dis[o]+ejes[o][d].costo){
+        dis[d]=dis[o]+ejes[o][d].costo;
+        camino[d]=o;
+        cambios=true;
+      }
+    }
+    return dis[DESTINO]<INF;
+};
+\end{code}
+\subsection{Floyd-Warhsall}\begin{code}
+tint n;tint mc[MAXN][MAXN]; //grafo (mat de long de ady)
+void floyd(){
+  forn(k,n)forn(i,n)forn(j,n) mc[i][j] <?= mc[i][k]+mc[k][j];
+}
+\end{code}\subsection{Edmond-Karp}\begin{code}
+usa: map,algorithm,queue
+struct Eje{ long f,m; long d(){return m-f;}};
+typedef map <int, Eje> MIE; MIE red[MAX_N];
+int N,F,D;
+void iniG(int n, int f, int d){N=n; F=f; D=d;fill(red, red+N, MIE());}
+void aEje(int d, int h, int m){
+  red[d][h].m=m;red[d][h].f=red[h][d].m=red[h][d].f=0;
+}
+#define DIF_F(i,j) (red[i][j].d())
+#define DIF_FI(i)  (i->second.d())
+int v[MAX_N];
+long camAu(){
+  fill(v, v+N,-1);
+  queue<int> c;
+  c.push(F);
+  while(!(c.empty()) && v[D]==-1){
+    int n = c.front(); c.pop();
+    for(MIE::iterator i = red[n].begin(); i!=red[n].end(); i++){
+      if(v[i->first]==-1 && DIF_FI(i) > 0){
+        v[i->first]=n;
+        c.push(i->first);
+      }
+    }
+  }
+  if(v[D]==-1)return 0;
+  int n = D;
+  long f = DIF_F(v[n], n);
+  while(n!=F){
+    f<?=DIF_F(v[n], n);
+    n=v[n];
+  }
+  n = D;
+  while(n!=F){
+    red[n][v[n]].f=-(red[v[n]][n].f+=f);
+    n=v[n];
+  }
+  return f;
+}
+long flujo(){long tot=0, c;do{tot+=(c=camAu());}while(c>0); return tot;}
+\end{code}
+\subsection{Preflow-push}
+\begin{code}
+usa: algorithm, list, forn
+#define MAX_N 200
+typedef list<tint> lint;
+typedef lint::iterator lintIt;
+//usadas para el flujo
+tint f[MAX_N][MAX_N]; //flujo
+tint e[MAX_N]; //exceso
+tint h[MAX_N]; //altura
+lintIt cur[MAX_N];
+
+//esto representa el grafo que hay que armar
+lint ady[MAX_N]; //lista de adyacencias (para los dos lados)
+tint c[MAX_N][MAX_N]; //capacidad (para los dos lados)
+tint n; //cant de nodos
+
+tint cf(tint i, tint j) { return c[i][j] - f[i][j]; }
+
+void push(tint i, tint j) {
+  tint p = min(e[i], cf(i,j));
+  f[j][i] = -(f[i][j] += p);
+  e[i] -= p;
+  e[j] += p;
+}
+void lift(tint i) {
+  tint hMin = n*n;
+  for(lintIt it = ady[i].begin() ; it != ady[i].end() ; ++it) {
+    if (cf(i, *it) > 0) hMin = min(hMin, h[*it]);
+  }
+  h[i] = hMin + 1;
+}
+void iniF(tint desde)
+{
+  forn(i,n) {
+    h[i] = e[i] = 0;
+    forn(j,n) f[i][j] = 0;
+    cur[i] = ady[i].begin();
+  }
+  h[desde] = n;
+  for(lintIt it = ady[desde].begin() ; it != ady[desde].end() ; ++it)
+  {
+    f[*it][desde] = -(f[desde][*it] = e[*it] = c[desde][*it]);
+  }
+}
+void disch(tint i) {
+  while(e[i] > 0)  {
+    lintIt& it = cur[i];
+    if (it == ady[i].end()) {lift(i); it = ady[i].begin();}
+    else if (cf(i,*it) > 0 && h[i] == h[*it] + 1) push(i,*it);
+    else ++it;
+  }
+}
+tint calcF(tint desde, tint hasta) {
+  iniF(desde);
+  lint l;
+  forn(i,n) {if (i != desde && i != hasta) l.push_back(i);}
+  for(lintIt it = l.begin() ; it != l.end() ; ++it) {
+    tint antH = h[*it];
+    disch(*it);
+    if (h[*it] > antH) { //move to front
+      l.push_front(*it);
+      l.erase(it);
+      it = l.begin();
+    }
+  } return e[hasta];
+}
+void addEje(tint a, tint b, tint ca) {
+  //requiere reiniciar las capacidades
+  if (c[a][b] == 0) {//soporta muchos ejes mismo par de nodos
+    ady[a].push_back(b);
+    ady[b].push_back(a);
+  }
+  c[b][a] = c[a][b] += ca;
+}
+void iniGrafo(tint nn) {  //requiere n ya leido
+	n=nn;
+  forn(i,n) {
+    forn(j,n) c[i][j] = 0;
+    //solo si se usa la version de addeje con soporte multieje
+    ady[i].clear();
+  }
+}
+\end{code}
+\subsection{Flujo de costo m'inimo}
+\begin{code}
+#define MAXN 100
+const int INF = 1<<30;
+struct Eje{
+	int f, m, p;
+	int d(){return m-f;}
+};
+Eje red[MAXN][MAXN];
+int adyc[MAXN], ady[MAXN][MAXN];
+int N,F,D;
+void iniG(int n, int f, int d){ // n, fuente, destino
+	N=n;F=f;D=d;
+	fill(red[0], red[N], (Eje){0,0,0});
+	fill(adyc, adyc+N, 0);
+}
+void aEje(int d, int h, int m, int p){
+	red[h][d].p = -(red[d][h].p = p);
+	red[d][h].m = m; //poner [h][d] en m tambien para hacer eje bidireccional
+	ady[d][adyc[d]++]=h; ady[h][adyc[h]++]=d;
+}
+int md[MAXN],vd[MAXN];
+int camAu(int &v){
+	fill(vd, vd+N, -1);
+	vd[F]=F; md[F]=0;
+	forn(rep, N)forn(i, N)if(vd[i]!=-1)forn(jj, adyc[i]){
+		int j = ady[i][jj], nd = md[i]+red[i][j].p;
+		if(red[i][j].d()>0)if(vd[j]==-1 || md[j] > nd)md[j]=nd,vd[j]=i;
+	}
+	v=0;
+	if(vd[D]==-1)return 0;
+	int f = INF;
+	for(int n=D;n!=F;n=vd[n]) f <?= red[vd[n]][n].d();
+	for(int n=D;n!=F;n=vd[n]){
+		red[n][vd[n]].f=-(red[vd[n]][n].f+=f);
+		v += red[vd[n]][n].p * f;
+	}
+	return f;
+}
+int flujo(int &r){ // r = costo, return = flujo
+	r=0; int v,f=0, c;
+	while((c = camAu(v)))r += v,f += c;
+	return f;
+}
+\end{code}
+%\begin{code}
+%usa: algorithm, cassert, vector, set, forn
+%#define MAX_N 256
+%#define MAX_M 1024
+%const int INF = (1<<31)-1;
+%using namespace std;
+%struct Eje{
+%  int d,l; /*destino y longitud*/
+%};
+%Eje ad[MAX_N][MAX_N]; /*adjacencias*/
+%int cAd[MAX_N];      /*cantidad de adjacencias*/
+%int velocidades[MAX_M+1];
+%void cargarGrafo(int n,int m){
+%    int i,a,b,l;
+%  fill(cAd,cAd+n,0);
+%    forn(i,m){
+%      scanf("%d%d%d",&a,&b,&l);
+%        a--;b--;
+%        ad[a][cAd[a]].d=b;
+%        ad[a][cAd[a]++].l=l;
+%        ad[b][cAd[b]].d=a;
+%        ad[b][cAd[b]++].l=l;
+%        velocidades[i]=l;
+%    }
+%    sort(velocidades,velocidades+m);
+%    velocidades[m]=INF;
+%}
+%/*VECTOR PARA HACER DIJSTRA*/
+%int distancia[MAX_N];
+%bool noKnow[MAX_N];
+%int minMax(int o,int d,int n, int cota){
+%  register int i,best,iBest;
+%  /*cargo todos los nodos con distancia INF menos el origen*/
+%  fill(distancia,distancia+n,INF);
+%    fill(noKnow,noKnow+n,true);
+%  distancia[o]=0;
+%  best=0;
+%  while(best<INF){
+%      best=INF;
+%        forn(i,n){
+%          if (noKnow[i] && distancia[i]<best){
+%              best=distancia[i];
+%                iBest=i;
+%            }
+%        }
+%      if (best<INF){
+%      noKnow[iBest]=false;
+%      forn(i,cAd[iBest]){ /*recorro todos los adjacentes*/
+%            if (ad[iBest][i].l>=cota && distancia[ad[iBest][i].d]>
+%	    max(distancia[iBest],ad[iBest][i].l))
+%              distancia[ad[iBest][i].d]=
+%	      max(distancia[iBest],ad[iBest][i].l);
+%            }
+%        }
+%  }
+%  return distancia[d];
+%};
+%
+%int maxMin(int o,int d,int n, int cota){
+%  register int i,best,iBest;
+%
+%    /*cargo todos los nodos con distancia INF menos el origen*/
+%  fill(distancia,distancia+n,0);
+%    fill(noKnow,noKnow+n,true);
+%  distancia[o]=INF;
+%
+%  best=INF;
+%  while(best>0){
+%      best=0;
+%        forn(i,n){
+%          if (noKnow[i] && distancia[i]>best){
+%              best=distancia[i];
+%                iBest=i;
+%            }
+%        }
+%
+%        if (best>0){
+%      noKnow[iBest]=false;
+%      forn(i,cAd[iBest]){ /*recorro todos los adjacentes*/
+%            if (ad[iBest][i].l<=cota && distancia[ad[iBest][i].d]<
+%              min(distancia[iBest],ad[iBest][i].l))
+%                 distancia[ad[iBest][i].d]=
+%                 min(distancia[iBest],ad[iBest][i].l);
+%            }
+%        }
+%  }
+%  return distancia[d];
+%}
+%
+%void resolver(int n,int m,int vi,int vf){
+%  int cantQ,o,d,best,cotaInf,minV,maxV;
+%
+%    scanf("%d",&cantQ);
+%    while(cantQ--){
+%      scanf("%d%d",&o,&d);o--;d--;
+%        cotaInf=velocidades[0];
+%        best=INF;
+%        minV=-1;maxV=INF-1;
+%        while(minV!=0 && maxV!=INF && best!=0 ){
+%          best=min(best,maxV-minV);
+%            minV=maxV;
+%            maxV=minMax(o,d,n,cotaInf);
+%            if (minV==maxV) continue;
+%            minV=maxMin(o,d,n,maxV);
+%            cotaInf=*(upper_bound(velocidades,velocidades+m,minV));
+%            cotaInf=*(upper_bound(velocidades,velocidades+m,cotaInf));
+%        }
+%        best+=vi+vf;
+%        printf("%d\n",best);
+%    };
+%};
+%\end{code}
+\subsection{Matching perfecto de costo m\'aximo - Hungarian O(N\^\ 3)}
+\begin{code}
+#define MAXN 256
+#define INFTO 0x7f7f7f7f
+int n;
+int mt[MAXN][MAXN]; // Matriz de costos (X * Y)
+int xy[MAXN], yx[MAXN]; // Matching resultante (X->Y, Y->X)
+
+int lx[MAXN], ly[MAXN], slk[MAXN], slkx[MAXN], prv[MAXN];
+char S[MAXN], T[MAXN];
+void updtree(int x) {
+	forn(y, n) if (lx[x] + ly[y] - mt[x][y] < slk[y]) {
+		slk[y] = lx[x] + ly[y] - mt[x][y];
+		slkx[y] = x;
+} }
+int hungar() {
+	forn(i, n) {
+		ly[i] = 0;
+		lx[i] = *max_element(mt[i], mt[i]+n);
+	}
+	memset(xy, -1, sizeof(xy));
+	memset(yx, -1, sizeof(yx));
+	forn(m, n) {
+		memset(S, 0, sizeof(S));
+		memset(T, 0, sizeof(T));
+		memset(prv, -1, sizeof(prv));
+		memset(slk, 0x7f, sizeof(slk));
+		queue<int> q;
+		#define bpone(e, p) { q.push(e); prv[e] = p; S[e] = 1; updtree(e); }
+		forn(i, n) if (xy[i] == -1) { bpone(i, -2); break; }
+		int x=0, y=-1;
+		while (y==-1) {
+			while (!q.empty() && y==-1) {
+				x = q.front(); q.pop();
+				forn(j, n) if (mt[x][j] == lx[x] + ly[j] && !T[j]) {
+					if (yx[j] == -1) { y = j; break; }
+					T[j] = 1;
+					bpone(yx[j], x);
+				}
+			}
+			if (y!=-1) break;
+			int dlt = INFTO;
+			forn(j, n) if (!T[j]) dlt = min(dlt, slk[j]);
+			forn(k, n) {
+				if (S[k]) lx[k] -= dlt;
+				if (T[k]) ly[k] += dlt;
+				if (!T[k]) slk[k] -= dlt;
+			}
+			forn(j, n) if (!T[j] && !slk[j]) {
+				if (yx[j] == -1) {
+					x = slkx[j]; y = j; break;
+				} else {
+					T[j] = 1;
+					if (!S[yx[j]]) bpone(yx[j], slkx[j]);
+				}
+			}
+		}
+		if (y!=-1) {
+			for(int p = x; p != -2; p = prv[p]) {
+				yx[y] = p;
+				int ty = xy[p]; xy[p] = y; y = ty;
+			}
+		} else break;
+	}
+	int res = 0;
+	forn(i, n) res += mt[i][xy[i]];
+	return res;
+}
+\end{code}
+\subsection{Camino/Circuito Euleriano}
+\begin{code}
+usa: algorithm, vector, list, forn
+typedef string ejeVal;
+#define MENORATODOS ""
+typedef pair<ejeVal, tint> eje;
+tint n; vector<eje> ady[MAXN]; tint g[MAXN];
+  //grafo (inG = in grado o grado si es no dir)
+tint aux[MAXN];
+tint pinta(tint f) {
+  if (aux[f]) return 0;
+  tint r = 1; aux[f] = 1;
+  forn(i,ady[f].size()) r+=pinta(ady[f][i].second);
+  return r;
+}
+tint compCon() { fill(aux, aux+n, 0); tint r=0; forn(i,n) if (!aux[i]) { r++; pinta(r); } return r; }
+bool isEuler(bool path, bool dir) {
+  if (compCon() > 1) return false; tint c = (path ? 2 : 0);
+  forn(i,n) if(!dir ? ady[i].size() % 2 : g[i] != 0) {
+    if (dir && abs(g[i]) > 1) return false;
+    c--; if(c<0) return false; }
+  return true;
+}
+bool findCycle(tint f, tint t, list<tint>& r) {
+  if (aux[f] >= ady[f].size()) return false;
+  tint va = ady[f][aux[f]++].second;
+  r.push_back(va);
+  return (va != t ? findCycle(va, t, r) : true);
+}
+list<tint> findEuler(bool path) { //always directed, no repeated values
+  if (!isEuler(path, true)) return list<tint>();
+  bool agrego = false;
+  if (path) {
+    tint i = max_element(g, g + n)-g;
+    tint j = min_element(g, g + n)-g;
+    if (g[i] != 0) { ady[i].push_back( eje(MENORATODOS, j) ); agrego = true; }
+  }
+  tint x = -1;
+  forn(i,n) {sort(ady[i].begin(), ady[i].end()); if (x<0 || ady[i][0] < ady[x][0]) x=i;}
+  fill(aux, aux+n, 0);
+  list<tint> r; findCycle(x,x,r); if (!agrego) r.push_front(r.back());
+  list<tint> aux; bool find=false;
+  list<tint>::iterator it = r.end();
+  do{ if (!find) --it;
+    for(find=findCycle(*it, *it, aux);!aux.empty();aux.pop_front()) it = r.insert(++it, aux.front());
+  } while (it != r.begin());
+  return r;
+}
+\end{code}
+\subsection{Erd\"os-Gallai}
+\begin{code}
+includes: algorithm, functional, numeric, forn
+tint n;tint d[MAXL]; //grafo
+tint sd[MAXL]; //auxiliar
+bool graphical() {
+  if (accumulate(d, d+n, 0) % 2 == 1) return false;
+  sort(d, d+n, greater<tint>()); copy(d, d+n, sd);
+  forn(i,n) sd[i+1]+=sd[i];
+  forn(i,n) {
+    if (d[i] < 0) return false;
+    tint j = lower_bound(d+i+1, d+n, i+1, greater<tint>()) - d;
+    if (sd[i] > i*(i+1) + sd[n-1] - sd[j-1] + (j-i-1)*(i+1))
+      return false;
+  } return true;
+}
+\end{code}
+\subsection{Puntos de articulaci\'on}
+\begin{code}
+usa: vector, forn
+typedef vector< vector<tint> > adyList;
+adyList g; //EL GRAFO
+vector<bool> artR; tint artT;
+vector<tint> artB,artD;
+void dfs(tint ant, tint v) {
+  artB[v] = artT; artD[v] = artT++;
+  forn(i, g[v].size()) if (artD[g[v][i]] == -1) {
+      if (!v && i) artR[0]=true;
+      tint w = g[v][i]; dfs(v, w);
+      if (artB[w] < artD[v]) artB[v] <?= artB[w];
+      else if (artB[w] >= artD[v] && v) artR[v]=true;
+  } else if (g[v][i] != ant) {
+      artB[v] <?= artD[g[v][i]];
+  }
+}
+vector<bool> artPoints() {
+  //dice true en los que son ptos de articulacion
+  artR.clear(); artR.insert(artR.begin(), g.size(), false);
+  if (!g.empty()) {
+      artD.clear(); artD.insert(artD.begin(), g.size(), -1);
+      artB.resize(g.size()); artT = 0; dfs(-1, 0);
+  }
+  return artR;
+}
+\end{code}
+\subsection{Grafo cactus}
+\textbf{Def:} Un grafo es cactus \textit{sii} todo eje est'a en a lo sumo un ciclo.
+\begin{code}
+struct eje { int t,i; };
+typedef vector<eje> cycle;
+int n,m,us[MAXM],pa[MAXN],epa[MAXN],tr[MAXM];
+vector<eje> ady[MAXN];
+void iniG(int nn) { n=nn; m=0; fill(ady,ady+n,vector<eje>());
+fill(pa,pa+n,-1); }
+//f:from t:to d:0 si no es dirigido y 1 si es dirigido
+void addE(int f, int t, int d) {
+  ady[f].push_back((eje){t,m});
+  if (!d) ady[t].push_back((eje){f,m}), tr[m]=0;
+  us[m++]=0;
+}
+//devuelve false si algun eje esta en mas de un ciclo
+bool cycles(vector<cycle>& vr,int f=0,int a=-2,int ai=-2) {
+  int t; pa[f]=a; epa[f]=ai;
+  forn(i,ady[f].size()) if (!tr[ady[f][i].i]++) if (pa[t=ady[f][i].t]!=-1) {
+    cycle c(1,ady[f][i]); int ef=f;
+    do {
+      if (!ef) return 0;
+      eje e=ady[pa[ef]][epa[ef]];
+      if (us[e.i]++) return 0;
+      c.push_back(e);
+    } while ((ef=pa[ef])!=t);
+    vr.push_back(c);
+  } else if (!cycles(vr,t,f,i)) return 0;
+  return 1;
+};
+\end{code}
+\newpage
+\section{Matem\'atica}
+\subsection{Algoritmos de cuentas}
+\subsubsection{MCD}\begin{code}
+tint mcd(tint a, tint b){ return (a==0)?b:mcd(b%a, a);}
+struct dxy {tint d,x,y;};
+dxy mcde(tint a, tint b) {
+  dxy r, t;
+  if (b == 0) {
+    r.d = a; r.x = 1; r.y = 0;
+  } else {
+    t = mcde(b,a%b);
+    r.d = t.d; r.x = t.y;
+    r.y = t.x - a/b*t.y;
+  }
+  return r;
+}
+\end{code}
+%
+\subsubsection{N'umero combinatorio}\begin{code}
+tint _comb[MAXMEM][MAXMEM];
+tint comb(tint n, tint m) {
+  if (m<0||m>n)return 0;if(m==0||m==n)return 1;
+  if (n >= MAXMEM) return comb(n-1,m-1)+comb(n-1,m);
+  tint& r = _comb[n][m];
+  if (r == -1) r = comb(n-1,m-1)+comb(n-1,m);
+  return r;
+}
+// Bolas en Cajas
+tint bolEnCaj(tint b, tint c) {return comb(c+b-1,b); }
+\end{code}
+%
+\subsubsection{Teorema Chino del Resto}\begin{code}
+usa: mcde
+#define modq(x) (((x)%q+q)%q)
+tint tcr(tint* r, tint* m, int n) { // x \equiv r_i (m_i) i \in [0..n)
+	tint p=0, q=1;
+	forn(i, n) {
+		p = modq(p-r[i]);
+		dxy w = mcde(m[i], q);
+		if (p%w.d) return -1; // sistema incompaible
+		q = q / w.d * m[i];
+		p = modq(r[i] + m[i] * p / w.d * w.x);
+	}
+	return p; // x \equiv p (q)
+}
+\end{code}
+%
+\subsubsection{Potenciaci'on en O(log(e))}%
+\begin{code}
+tint potLog(tint b, tint e, tint m) {
+    if (!e) return 1LL;
+    tint r=potLog(b, e>>1, m);
+    r=(r*r)%m;
+    return (e&1)?(r*b)%m:r;
+}
+\end{code}
+\subsubsection{Longitud de los n'umeros de 1 a N}%
+\begin{code}
+tint sumDig(tint n, tint m){ // resultado modulo m
+    tint b=10, d=1, r=0;
+    while(b<=n){
+        r = (r + (b-b/10LL)*(d++))%m;
+        b*=10LL;
+    }
+    return (r + (n-b/10LL+1LL)*d)%m;
+}
+\end{code}
+%
+\subsection{Teoremas y propiedades}%
+\subsubsection{Ecuaci'on de grafo planar}
+$regiones = ejes - nodos + componentesConexas + 1$
+\subsubsection{Ternas pitag'oricas}
+Hay ternas pitag'oricas de la forma: $(a,b,c) = ( m^2-n^2 , 2\cdot m\cdot n, m^2+n^2 ) \forall m > n > 0 $\\
+y son primitivas \emph{sii} $(2 | m\cdot n) \land (mcd(m, n) = 1)$\\
+(Todas las primitivas (con $(a,b)$ no ordenado) son de esa forma.) Obs: $(\mathrm{m}+i\mathrm{n})^2 = \mathrm{a}+i\mathrm{b}$
+\subsubsection{Teorema de Pick}
+$A = I + \frac{B}{2} - 1$, donde $I =$ interior y $B =$ borde
+%
+\subsubsection{Propiedadas varias}
+$\sum_{i=0}^n{r^i} = \frac{r^{n+1}-1}{r-1}$ ; $\sum_{i=1}^n{i^2} = \frac{n\cdot(n+1)\cdot(2n+1)}{6}$ ;
+$\sum_{i=1}^n{i^3} = \left(\frac{n\cdot(n+1)}{2}\right)^2$ \\
+$\sum_{i=1}^n{i^4} = \frac{n\cdot(n+1)\cdot(2n+1)\cdot(3n^2+3n-1)}{12}$ ;
+$\sum_{i=1}^{ n} i^5 = \left(\frac{ n \cdot (n+1)}{2}\right) ^2 \cdot \frac{2 n ^2 + 2n - 1}{3}$ \\
+%
+$\sum_{i=1}^n{\comb{n-1}{i-1}} = 2^{n-1}$ ; $\sum_{i=1}^n{i\cdot\comb{n-1}{i-1}} = n\cdot2^{n-1}$ \\
+%
+\subsection{Tablas y cotas}
+\subsubsection{Primos}
+2 3 5 7 11 13 17 19 23 29
+31 37 41 43 47 53 59 61 67 71
+73 79 83 89 97 101 103 107 109 113
+127 131 137 139 149 151 157 163 167 173
+179 181 191 193 197 199 211 223 227 229
+233 239 241 251 257 263 269 271 277 281
+283 293 307 311 313 317 331 337 347 349
+353 359 367 373 379 383 389 397 401 409
+419 421 431 433 439 443 449 457 461 463
+467 479 487 491 499 503 509 521 523 541
+547 557 563 569 571 577 587 593 599 601
+607 613 617 619 631 641 643 647 653 659
+661 673 677 683 691 701 709 719 727 733
+739 743 751 757 761 769 773 787 797 809
+811 821 823 827 829 839 853 857 859 863
+877 881 883 887 907 911 919 929 937 941
+947 953 967 971 977 983 991 997 1009 1013
+1019 1021 1031 1033 1039 1049 1051 1061 1063 1069
+1087 1091 1093 1097 1103 1109 1117 1123 1129 1151
+1153 1163 1171 1181 1187 1193 1201 1213 1217 1223
+1229 1231 1237 1249 1259 1277 1279 1283 1289 1291
+1297 1301 1303 1307 1319 1321 1327 1361 1367 1373
+1381 1399 1409 1423 1427 1429 1433 1439 1447 1451
+1453 1459 1471 1481 1483 1487 1489 1493 1499 1511
+1523 1531 1543 1549 1553 1559 1567 1571 1579 1583
+1597 1601 1607 1609 1613 1619 1621 1627 1637 1657
+1663 1667 1669 1693 1697 1699 1709 1721 1723 1733
+1741 1747 1753 1759 1777 1783 1787 1789 1801 1811
+1823 1831 1847 1861 1867 1871 1873 1877 1879 1889
+1901 1907 1913 1931 1933 1949 1951 1973 1979 1987
+1993 1997 1999 2003 2011 2017 2027 2029 2039 2053
+2063 2069 2081
+
+%2083 2087 2089 2099 2111 2113 2129
+%2131 2137 2141 2143 2153 2161 2179 2203 2207 2213
+%2221 2237 2239 2243 2251 2267 2269 2273 2281 2287
+%2293 2297 2309 2311 2333 2339 2341 2347 2351 2357
+%2371 2377 2381 2383 2389 2393 2399 2411 2417 2423
+%2437 2441 2447 2459 2467 2473 2477 2503 2521 2531
+%2539 2543 2549 2551 2557 2579 2591 2593 2609 2617
+%2621 2633 2647 2657 2659 2663 2671 2677 2683 2687
+%2689 2693 2699 2707 2711 2713 2719 2729 2731 2741
+%2749 2753 2767 2777 2789 2791 2797 2801 2803 2819
+%2833 2837 2843 2851 2857 2861 2879 2887 2897 2903
+%2909 2917 2927 2939 2953 2957 2963 2969 2971 2999
+%3001 3011 3019 3023 3037 3041 3049 3061 3067 3079
+%3083 3089 3109 3119 3121 3137 3163 3167 3169 3181
+%3187 3191 3203 3209 3217 3221 3229 3251 3253 3257
+%3259 3271 3299 3301 3307 3313 3319 3323 3329 3331
+%3343 3347 3359 3361 3371 3373 3389 3391 3407 3413
+%3433 3449 3457 3461 3463 3467 3469 3491 3499 3511
+%3517 3527 3529 3533 3539 3541 3547 3557 3559 3571\\
+\paragraph{Primos cercanos a $10^n$}\ \\
+9941 9949 9967 9973 10007 10009 10037 10039 10061 10067 10069 10079\\
+99961 99971 99989 99991 100003 100019 100043 100049 100057 100069\\
+999959 999961 999979 999983 1000003 1000033 1000037 1000039\\
+9999943 9999971 9999973 9999991 10000019 10000079 10000103 10000121\\
+99999941 99999959 99999971 99999989 100000007 100000037 100000039 100000049\\
+999999893 999999929 999999937 1000000007 1000000009 1000000021 1000000033
+
+\paragraph{Cantidad de primos menores que $10^n$}\ \\
+$\pi(10^1)$ = 4 ;
+$\pi(10^2)$ = 25 ;
+$\pi(10^3)$ = 168 ;
+$\pi(10^4)$ = 1229 ;
+$\pi(10^5)$ = 9592 \\
+$\pi(10^6)$ = 78.498 ;
+$\pi(10^7)$ = 664.579 ;
+$\pi(10^8)$ = 5.761.455 ;
+$\pi(10^9)$ = 50.847.534 \\
+$\pi(10^{10})$ = 455.052,511 ;
+$\pi(10^{11})$ = 4.118.054.813 ;
+$\pi(10^{12})$ = 37.607.912.018% ;
+%
+% Fuente: http://primes.utm.edu/howmany.shtml#table
+%
+%
+\subsubsection{Divisores}
+Cantidad de divisores ($\sigma_0$) para \emph{algunos} $n / \neg\exists n'<n, \sigma_0(n') \geqslant \sigma_0(n)$ \\
+$\sigma_0(60)$ = 12 ; $\sigma_0(120)$ = 16 ; $\sigma_0(180)$ = 18 ; $\sigma_0(240)$ = 20 ; $\sigma_0(360)$ = 24 \\
+$\sigma_0(720)$ = 30 ; $\sigma_0(840)$ = 32 ; $\sigma_0(1260)$ = 36 ; $\sigma_0(1680)$ = 40 ; $\sigma_0(10080)$ = 72 \\ $\sigma_0(15120)$ = 80 ; $\sigma_0(50400)$ = 108 ; $\sigma_0(83160)$ = 128 ; $\sigma_0(110880)$ = 144 \\
+$\sigma_0(498960)$ = 200 ; $\sigma_0(554400)$ = 216 ; $\sigma_0(1081080)$ = 256 ; $\sigma_0(1441440)$ = 288  $\sigma_0(4324320)$ = 384 ; $\sigma_0(8648640)$ = 448
+
+%
+Suma de divisores ($\sigma_1$) para \emph{algunos} $n / \neg\exists n'<n, \sigma_1(n') \geqslant \sigma_1(n)$ \\
+$\sigma_1(96)$ = 252 ; $\sigma_1(108)$ = 280 ; $\sigma_1(120)$ = 360 ; $\sigma_1(144)$ = 403 ; $\sigma_1(168)$ = 480 \\
+$\sigma_1(960)$ = 3048 ; $\sigma_1(1008)$ = 3224 ; $\sigma_1(1080)$ = 3600 ; $\sigma_1(1200)$ = 3844 \\
+$\sigma_1(4620)$ = 16128 ; $\sigma_1(4680)$ = 16380 ; $\sigma_1(5040)$ = 19344 ; $\sigma_1(5760)$ = 19890 \\
+$\sigma_1(8820)$ = 31122 ; $\sigma_1(9240)$ = 34560 ; $\sigma_1(10080)$ = 39312 ; $\sigma_1(10920)$ = 40320 \\
+$\sigma_1(32760)$ = 131040 ; $\sigma_1(35280)$ = 137826 ; $\sigma_1(36960)$ = 145152 ; $\sigma_1(37800)$ = 148800 \\
+$\sigma_1(60480)$ = 243840 ; $\sigma_1(64680)$ = 246240 ; $\sigma_1(65520)$ = 270816 ; $\sigma_1(70560)$ = 280098 \\
+$\sigma_1(95760)$ = 386880 ; $\sigma_1(98280)$ = 403200 ; $\sigma_1(100800)$ = 409448  \\
+$\sigma_1(491400)$ = 2083200 ; $\sigma_1(498960)$ = 2160576 ; $\sigma_1(514080)$ = 2177280 \\
+$\sigma_1(982800)$ = 4305280 ; $\sigma_1(997920)$ = 4390848 ; $\sigma_1(1048320)$ = 4464096 \\
+$\sigma_1(4979520)$ = 22189440 ; $\sigma_1(4989600)$ = 22686048 ; $\sigma_1(5045040)$ = 23154768 \\
+$\sigma_1(9896040)$ = 44323200 ; $\sigma_1(9959040)$ = 44553600 ; $\sigma_1(9979200)$ = 45732192
+%
+%
+\subsubsection{Factoriales}
+\begin{tabular}{l|l}
+0! =	1             & 11! = 39.916.800  \\
+1! =	1             & 12! =	479.001.600	($\in \mathtt{int}$)\\
+2! =	2             & 13! =	6.227.020.800	\\
+3! =	6             & 14! =	87.178.291.200	\\
+4! =	24            & 15! =	1.307.674.368.000	\\
+5! =	120   			  & 16! =	20.922.789.888.000	\\
+6! =	720           & 17! =	355.687.428.096.000	\\
+7! =	5.040	        & 18! =	6.402.373.705.728.000	\\
+8! =	40.320	      & 19! =	121.645.100.408.832.000	\\
+9! =	362.880       & 20! =	2.432.902.008.176.640.000	($\in \mathtt{tint}$) \\
+10! =	3.628.800     & 21! =	51.090.942.171.709.400.000
+\end{tabular}
+
+max signed tint = 9.223.372.036.854.775.807 \\
+max unsigned tint = 18.446.744.073.709.551.615
+%
+%
+\subsection{Soluci\'on de Sistemas Lineales}
+\begin{code}
+typedef vector<tipo> Vec;
+typedef vector<Vec> Mat;
+#define eps 1e-10
+#define feq(a, b) (fabs(a-b)<eps)
+bool resolver_ev(Mat a, Vec y, Vec &x, Mat &ev){
+  int n = a.size(), m = n?a[0].size():0, rw = min(n, m);
+  vector<int> p; forn(i,m) p.push_back(i);
+  forn(i, rw){
+    int uc=i, uf=i;
+    // aca pivotea. lo unico importante es que a[i][i] sea no nulo
+    forsn(f, i, n) forsn(c, i, m) if(fabs(a[f][c])>fabs(a[uf][uc])) {uf=f;uc=c;}
+    if (feq(a[uf][uc], 0)) { rw = i; break; }
+    forn(j, n) swap(a[j][i], a[j][uc]);
+    swap(a[i], a[uf]); swap(y[i], y[uf]); swap(p[i], p[uc]);
+    // fin pivoteo
+    tipo inv = 1 / a[i][i]; //aca divide
+    forsn(j, i+1, n) {
+      tipo v = a[j][i] * inv;
+      forsn(k, i, m) a[j][k]-=v * a[i][k];
+      y[j] -= v*y[i];
+    }
+  } // rw = rango(a), aca la matriz esta triangulada
+  forsn(i, rw, n) if (!feq(y[i],0)) return false; // checkeo de compatibilidad
+  x = vector<tipo>(m, 0);
+  dforn(i, rw){
+    tipo s = y[i];
+    forsn(j, i+1, rw) s -= a[i][j]*x[p[j]];
+    x[p[i]] = s / a[i][i]; //aca divide
+  }
+  ev = Mat(m-rw, Vec(m, 0)); // Esta parte va SOLO si se necesita el ev
+  forn(k, m-rw) {
+    ev[k][p[k+rw]] = 1;
+    dforn(i, rw){
+      tipo s = -a[i][k+rw];
+      forsn(j, i+1, rw) s -= a[i][j]*ev[k][p[j]];
+      ev[k][p[i]] = s / a[i][i]; //aca divide
+    }
+  }
+  return true;
+}
+
+bool diagonalizar(Mat &a){
+	// PRE: a.cols > a.filas
+	// PRE: las primeras (a.filas) columnas de a son l.i.
+  int n = a.size(), m = a[0].size();
+  forn(i, n){
+		int uf = i;
+		forsn(k, i, n) if (fabs(a[k][i]) > fabs(a[uf][i])) uf = k;
+		if (feq(a[uf][i], 0)) return false;
+		swap(a[i], a[uf]);
+    tipo inv = 1 / a[i][i]; // aca divide
+    forn(j, n) if (j != i) {
+      tipo v = a[j][i] * inv;
+      forsn(k, i, m) a[j][k] -= v * a[i][k];
+		}
+    forsn(k, i, m) a[i][k] *= inv;
+  }
+	return true;
+}
+\end{code}
+\subsection{Programaci'on Lineal - Simplex}
+\textbf{Teorema de dualidad (fuerte):} Dado un problema lineal $\Pi_1$: $\mathrm{minimizar}\ c^t\cdot X, \mathrm{sujeto\ a}\ A\cdot X \leqslant b, X \geqslant 0$ se define el problema lineal \emph{dual standard} $\Pi_2$  como: $\mathrm{minimizar}\ -b^t\cdot Y, \mathrm{sujeto\ a}\ A^t\cdot Y \geqslant c$. Si $\Pi_1$ es satisfacible entonces $\Pi_2$ es satisfacible y $c^t\cdot X = b^t \cdot Y$. Si $\Pi_1$ es insatisfacible o no acotado entonces $\Pi_2$ es insatisfacible o no acotado (Obs: no pueden ser ambos no acotados).
+
+Dados \texttt{cfun}, \texttt{rmat} y \texttt{bvec}; Minimiza $\mathtt{cfun}^t \cdot \mathtt{xvar}$ sujeto a las condiciones $\mathtt{rmat} \cdot \mathtt{xvar} \leq \mathtt{bvec}$. Los valores de \texttt{bvec} pueden ser negativos para representar desigualdades de $\geq$ (por ejemplo: $-x \leq -5$).
+
+Es sensible a errores num'ericos; se recomiendan valores de \texttt{eps=1e-16} y \texttt{epsval=1e-14}. El orden de magnitud de \texttt{epsval} debe ser del orden de la relaci'on entre los valores m'as grandes de \texttt{rmat}.
+\begin{code}
+usa: resolver,
+
+#define MAXVAR 64
+#define MAXRES 128
+tipo rmat[MAXRES][MAXVAR+MAXRES*2];
+tipo bvec[MAXRES];
+tipo cfun[MAXVAR+MAXRES*2];
+tipo xvar[MAXVAR];
+
+#define HAYSOL	0
+#define NOSOL -1
+#define NOCOTA -2
+
+int simplex(int m, int n) { // cant restric; cant vars
+	int base[MAXVAR+MAXRES], esab[MAXVAR+MAXRES];
+	int nn = n+m; // Variables (originales) + holgura
+	tipo res = 0;
+
+	forn(i, m) forn(j, m) rmat[i][n+j] = (i==j);
+	forn(i, m) cfun[n+i] = 0;
+
+	forn(i, n) esab[i] = -1;
+	forn(i, m) { base[i] = n+i; esab[n+i] = i; }
+
+	// Agrega las artificiales; si todos los bvec[] son positivos se puede omitir esto
+	int arts[MAXRES];
+	int bmin = 0;
+	forn(i, m) if (bvec[i] < bvec[bmin]) bmin = i;
+	int art = bvec[bmin] < -eps;
+	forn(i, m) arts[i] = 2*(bvec[i] >= -eps) - 1;
+	if (art) {
+		forn(i, m) rmat[i][nn] = -(bvec[i] < -eps);
+		esab[n+bmin] = -1; esab[nn] = bmin; base[bmin] = nn;
+		nn++;
+	}
+
+	Mat B(m, Vec(m, 0));
+	Vec y(m, 0), c(m, 0), d(m, 0);
+	int j0 = 0;
+	do {
+		forn(i, m) forn(j, m) B[i][j] = arts[j] * rmat[j][base[i]];
+		forn(i, m) c[i] = art?base[i]>=m+n:cfun[base[i]];
+		resolver(B, c, y);
+
+		for(; j0 < nn; ++j0) if (esab[j0] == -1) {
+			res = art?j0>=m+n:cfun[j0];
+			forn(i, m) res -= y[i] * arts[i] * rmat[i][j0];
+			if (j0 < m+n && res < epsval) break;
+		}
+
+		forn(i, m) forn(j, m) B[i][j] = rmat[i][base[j]];
+		forn(i, m) c[i] = rmat[i][j0];
+		resolver(B, c, d);
+		forn(i, m) c[i] = bvec[i];
+		resolver(B, c, y);
+
+		if (j0 == nn) if (art) {
+			if (esab[m+n] != -1 && y[esab[m+n]] > epsval) return NOSOL;
+			for(int i = m+n-1; i >= 0; i--) if (esab[i] == -1) { esab[i] = esab[m+n]; base[esab[i]] = i; break; }
+			art = 0; nn = m+n; j0 = 0; continue;
+		} else break; // Optimo
+
+		bool bl = true;
+		forn(i, m) bl = bl && (d[i] <= eps);
+
+		if (bl) return NOCOTA; // Problema no acotado
+
+		int j1 = 0;
+		forn(i, m) if (d[i] > 0) {
+			tipo mlt = y[i] / d[i];
+			if (!bl || (feq(mlt, res) && (base[i] < j1)) || (mlt < res)) {
+				res = mlt;
+				j1 = base[i];
+				bl = true;
+			}
+		}
+		if (res < eps && ++j0) continue;
+		if (art && j1 == m+n) nn--, art--;
+
+		int w = esab[j1];      // variable de salida
+		base[w] = j0;           // Entra j0
+		esab[j0] = w;
+		esab[j1] = -1;         // j1 es no basica ahora.
+		j0 = 0;
+	} while(1);
+
+	forn(i, m) forn(j, m) B[i][j] = rmat[i][base[j]];
+	forn(i, m) c[i] = bvec[i];
+	resolver(B, c, y);
+
+	forn(i, n) xvar[i] = (esab[i] == -1)?0:y[esab[i]];
+
+	return HAYSOL;
+}
+\end{code}
+\subsection{Factorizaci'on QR de Householder}
+Descompone $A = Q\cdot R$. Observaci'on: $|det(A)| = |det(R)|$.
+\begin{code}
+typedef vector<vector<tipo> > Mat;
+typedef vector<tipo> Vec;
+tipo sqr(tipo x) {return x*x;}
+
+void show(Mat &a);
+
+void qr(const Mat &a, Mat &q, Mat &r) {
+	int n = a.size();
+	r = a;
+	q = Mat(n, Vec(n, 0));
+	forn(i, n) forn(j, n) q[i][j] = (i==j);
+
+	forn(k, n-1) {
+		tipo beta = 0;
+		forsn(i, k, n) beta += sqr(r[i][k]);
+		tipo alph = sqrt(beta);
+		if (alph * r[k][k] >= 0) alph = -alph;
+
+		Vec v(n, 0);
+		forsn(i, k, n) v[i] = r[i][k]; v[k] -= alph;
+		beta += sqr(v[k]) - sqr(r[k][k]);
+
+		#define QRmult(X) \
+		forn(i, n) { tipo w = 0; \
+			forsn(j, k, n) w += X * v[j]; w /= beta/2; \
+			forsn(j, k, n) X -= w * v[j]; }
+
+		// Q := Q * (I - 2 v * v^t) = Q - 2 * ((Q * v) * v^t)
+		QRmult(q[i][j]);
+		// A := Qj * A; \equiv A^t := A^t * Qj;
+		QRmult(r[j][i]);
+
+		forsn(i, k+1, n) r[i][k] = 0;
+	}
+}
+
+// QR para calcular autvalores (no estoy seguro de para qué matrices sirve)
+Mat operator* (const Mat &ml, const Mat &mr) {
+	int a = ml.size(), b = mr.size(), c = mr[0].size();
+	Mat res(a, Vec(c, 0));
+	forn(i, a) forn(j, c) forn(k, b) res[i][j] += ml[i][k] * mr[k][j];
+	return res;
+}
+
+#define iterac ???
+void autoval(Mat &a) {
+	int n = a.size();
+	Mat q(n, Vec(n, 0));
+	forn(i, iterac) {
+		qr(a, q, a);
+		a = a * q;
+	}
+	// Los autovalores convergen en la diagonal de "a"
+}
+\end{code}
+\subsection{Multiplicaci'on de Karatsuba}
+\texttt{BASE} y \texttt{BASEXP} deben ser tales que $\mathtt{BASE} = 10^\mathtt{BASEXP}$ y adem'as, $\mathtt{BASE}^2\cdot largo$ entre en un \texttt{int} o \texttt{tint}, seg'un el caso.\\
+Los n'umeros se representan en base \texttt{BASE} con la parte menos significativa en los 'indices m'as bajos.
+\begin{code}
+#define BASE 1000000
+#define BASEXP 6
+
+typedef tint tipo; // o int
+
+tipo* ini(int l){
+	tipo *r = new tipo[l];
+	fill(r, r+l, 0);
+	return r;
+}
+#define add(l,s,d,k)forn(i, l)(d)[i]+=(s)[i]*k
+void mulFast(int l, tipo *n1, tipo *n2, tipo *nr){
+	if(l<=0)return;
+	if(l<35){
+		forn(i, l)forn(j, l)nr[i+j]+=n1[i]*n2[j];
+	}else{
+		int lac = l/2, lbd = l - (l/2);
+		tipo *a = n1, *b=n1+lac, *c=n2, *d=n2+lac;
+		tipo *ab = ini(lbd+1), *cd = ini(lbd+1);
+		tipo *ac = ini(lac+lac), *bd = ini(lbd+lbd);
+		add(lac, a, ab, 1);
+		add(lbd, b, ab, 1);
+		add(lac, c, cd, 1);
+		add(lbd, d, cd, 1);
+		mulFast(lac, a, c, ac);
+		mulFast(lbd, b, d, bd);
+		add(lac+lac, ac, nr+lac,-1);
+		add(lbd+lbd, bd, nr+lac,-1);
+		add(lac+lac, ac, nr,1);
+		add(lbd+lbd, bd, nr+lac+lac,1);
+		mulFast(lbd+1, ab, cd, nr+lac);
+		free(ab); free(cd); free(ac); free(bd);
+	}
+}
+void mulFast(int l1, tipo *n1, int l2, tipo *n2, int &lr, tipo *nr){
+	while(l1<l2) n1[l1++]=0;
+	while(l2<l1) n2[l2++]=0;
+	lr=l1+l2+3;
+	fill(nr, nr+lr, 0);
+	mulFast(l1, n1, n2, nr);
+
+	tipo r = 0;
+	forn(i, lr){
+		tipo q = r+nr[i];
+		nr[i] = q%BASE,r = q/BASE;
+	}
+	while(lr>1 && nr[lr-1]==0)lr--;
+}
+
+// Cosas extra (convierten entre base 10 y 10^n)
+void base10ton(int &l, tipo* n) {
+	tipo p10[BASEXP]; p10[0] = 1;
+	forn(i, BASEXP-1) p10[i+1] = p10[i] * 10;
+
+	int nl = (l+BASEXP-1)/BASEXP;
+	forsn(i, l, nl*BASEXP) n[i] = 0;
+	forn(i, nl) {
+		tint s = 0;
+		forn(j, BASEXP) s+= n[i*BASEXP+j]*p10[j];
+		n[i] = s;
+	}
+	l = nl;
+}
+
+void baseNto10(int &l, tipo* n) {
+	for(int i = l-1; i>=0; --i) {
+		tipo v = n[i];
+		forn(j, BASEXP) {
+			n[i*BASEXP+j] = v % 10; v /= 10;
+		}
+	}
+	l = l*BASEXP;
+	while (!n[l-1] && l > 1) l--;
+}
+\end{code}
+%
+\subsection{Long - Entero largo}\begin{code}
+typedef tint tipo;
+#define BASEXP 6
+#define BASE 1000000
+#define LMAX 1000
+
+struct Long {
+	int l;
+	tipo n[LMAX];
+	Long(tipo x) { 	l = 0; forn(i, LMAX) { n[i]=x%BASE; l+=!!x||!i; x/=BASE;} }
+	Long(){*this = Long(0);}
+	Long(string x) {
+		l=(x.size()-1)/BASEXP+1;
+		fill(n, n+LMAX, 0);
+		tipo r=1;
+		forn(i,x.size()){
+			n[i / BASEXP] += r * (x[x.size()-1-i]-'0');
+			r*=10; if(r==BASE)r=1;
+		}
+	}
+};
+
+void out(Long& a) {
+	char msg[BASEXP+1];
+	cout << a.n[a.l-1];
+	dforn(i,a.l-1) {
+		sprintf(msg, "%6.6llu", a.n[i]); cout << msg; // 6 = BASEXP !
+	}
+	cout << endl;
+}
+void invar(Long &a) {
+	fill(a.n+a.l, a.n+LMAX, 0);
+	while(a.l>1 && !a.n[a.l-1]) a.l--;
+}
+
+void lsuma(const Long&a, const Long&b, Long&c) { // c = a + b
+	c.l = max(a.l, b.l);
+	tipo q = 0;
+	forn(i, c.l) q += a.n[i]+b.n[i], c.n[i]=q%BASE, q/=BASE;
+	if(q) c.n[c.l++] = q;
+	invar(c);
+}
+Long& operator+= (Long&a, const Long&b) { lsuma(a, b, a); return a; }
+Long operator+ (const Long&a, const Long&b) { Long c; lsuma(a, b, c); return c; }
+
+bool lresta(const Long&a, const Long&b, Long&c) { // c = a - b
+	c.l = max(a.l, b.l);
+	tipo q = 0;
+	forn(i, c.l) q += a.n[i]-b.n[i], c.n[i]=(q+BASE)%BASE, q=(q+BASE)/BASE-1;
+	invar(c);
+	return !q;
+}
+Long& operator-= (Long&a, const Long&b) { lresta(a, b, a); return a; }
+Long operator- (const Long&a, const Long&b) {Long c; lresta(a, b, c); return c;}
+
+bool operator< (const Long&a, const Long&b) { Long c; return !lresta(a, b, c); }
+bool operator<= (const Long&a, const Long&b) { Long c; return lresta(b, a, c); }
+bool operator== (const Long&a, const Long&b) { return a <= b && b <= a; }
+
+void lmul(const Long&a, const Long&b, Long&c) { // c = a * b
+	c.l = a.l+b.l;
+	fill(c.n, c.n+b.l, 0);
+	forn(i, a.l) {
+		tipo q = 0;
+		forn(j, b.l) q += a.n[i]*b.n[j]+c.n[i+j], c.n[i+j] = q%BASE, q/=BASE;
+		c.n[i+b.l] = q;
+	}
+	invar(c);
+}
+
+Long& operator*= (Long&a, const Long&b) { Long c; lmul(a, b, c); return a=c; }
+Long operator* (const Long&a, const Long&b) { Long c; lmul(a, b, c); return c; }
+
+void lmul(const Long&a, tipo b, Long&c) { // c = a * b
+	tipo q = 0;
+	forn(i, a.l) q += a.n[i]*b, c.n[i] = q%BASE, q/=BASE;
+	c.l = a.l;
+	while(q) c.n[c.l++] = q%BASE, q/=BASE;
+    invar(c);
+}
+
+Long& operator*= (Long&a, tipo b) { lmul(a, b, a); return a; }
+Long operator* (const Long&a, tipo b) { Long c = a; c*=b; return c; }
+
+void ldiv(const Long& a, tipo b, Long& c, tipo& rm) { // c = a / b ; rm = a % b
+	rm = 0;
+	dforn(i, a.l) {
+		rm = rm * BASE + a.n[i];
+		c.n[i] = rm / b; rm %= b;
+	}
+	c.l = a.l;
+	invar(c);
+}
+
+Long operator/ (const Long&a, tipo b) { Long c; tipo r; ldiv(a, b, c, r); return c; }
+tipo operator% (const Long&a, tipo b) { Long c; tipo r; ldiv(a, b, c, r); return r; }
+
+void ldiv(const Long& a, const Long& b, Long& c, Long& rm) { // c = a / b ; rm = a % b
+	rm = 0;
+	dforn(i, a.l) {
+        if (rm.l == 1 && rm.n[0] == 0)
+            rm.n[0] = a.n[i];
+        else {
+            dforn(j, rm.l) rm.n[j+1] = rm.n[j];
+            rm.n[0] = a.n[i]; rm.l++;
+        }
+		tipo q = rm.n[b.l] * BASE + rm.n[b.l-1];
+		tipo u = q / (b.n[b.l-1] + 1);
+		tipo v = q /  b.n[b.l-1] + 1;
+		while (u < v-1) {
+			tipo m = (u+v)/2;
+			if (b*m <= rm) u = m; else v = m;
+		}
+		c.n[i] = u;
+		rm -= b*u;
+	}
+	c.l = a.l;
+	invar(c);
+}
+
+Long operator/ (const Long&a, const Long & b) { Long c,r; ldiv(a, b, c, r); return c; }
+Long operator% (const Long&a, const Long & b) { Long c,r; ldiv(a, b, c, r); return r; }
+\end{code}
+\subsection{Fracci'on}
+\begin{code}
+usa: algorithm, tint, mcd
+struct frac {
+	tint p,q;
+	frac(tint num=0, tint den=1):p(num),q(den) { norm(); }
+	frac& operator+=(const frac& o){
+		tint a = mcd(q,o.q);
+		p=p*(o.q/a)+o.p*(q/a);
+		q*=(o.q/a);
+		norm();
+		return *this;
+	}
+	frac& operator-=(const frac& o){
+		tint a = mcd(q,o.q);
+		p=p*(o.q/a)-o.p*(q/a);
+		q*=(o.q/a);
+		norm();
+		return *this;
+	}
+	frac& operator*=(frac o){
+		tint a = mcd(q,o.p);
+		tint b = mcd(o.q,p);
+		p=(p/b)*(o.p/a);
+		q=(q/a)*(o.q/b);
+		return *this;
+	}
+	frac& operator/=(frac o){
+		tint a = mcd(q,o.q);
+		tint b = mcd(o.p,p);
+		p=(p/b)*(o.q/a);
+		q=(q/a)*(o.p/b);
+		norm();
+		return *this;
+	}
+
+	void norm(){
+		tint aux = mcd(p,q);
+		if (aux){ p/=aux; q/=aux; }
+		else { q=1; }
+		if (q<0) { q=-q; p=-p; }
+	}
+};
+\end{code}
+\newpage
+\section{Cosas}\subsection{Morris-Prath}
+premp$[i+1]$ da el maximo $k$ en $[0,i)$ tal que $s[0,k) = s[i-k,i)$
+\begin{code}
+tint pmp[MAXL];
+void preMp(string& x){
+  tint i=0, j = pmp[0] = -1;
+  while(i<(tint)x.size()){
+    while(j>-1 && x[i] != x[j]) j = pmp[j];
+      pmp[++i] = ++j;
+  }
+}
+void mp(string& b, string& g){
+  preMp(b);
+  tint i=0,j=0;
+  while(j<(tint)g.size()){
+    while(i>-1 && b[i] != g[j]){i = pmp[i];}
+    i++; j++;
+    if (i>=(tint)b.size()){
+      OUTPUT(j - i);
+      i=pmp[i];
+    }
+  }
+}
+\end{code}
+\subsection{Subsecuencia com'un m'as larga}\begin{code}
+tint lcs(vector<tint> a, vector<tint> b) { // Longest Common Subsequence
+	vector< vector<tint> > m(2, vector<tint>(b.size()+1));
+	forn(i,a.size())forn(j,b.size())
+    m[1-i%2][j+1]=(a[i]==b[j]?m[i%2][j]+1:max(m[i%2][j+1],m[1-i%2][j]));
+	return m[a.size()%2][b.size()];
+}
+\end{code}
+\subsection{SAT - 2}
+\begin{code}
+usa: stack
+#define MAXN 1024
+#define MAXEQ 1024000
+
+int fch[2*MAXN], nch[2*MAXEQ], dst[2*MAXEQ], eqs; // Grafo
+#define addeje(s,d) { nch[eqs]=fch[s]; dst[fch[s]=eqs++]=d; }
+#define neg(X) (2*MAXN-1-(X))
+void init() {
+	memset(fch, 0xff, sizeof(fch));
+	eqs=0;
+}
+void addEqu(int a, int b) {
+	addeje(neg(a), b);
+	addeje(neg(b), a);
+}
+char verdad[2*MAXN]; // Solo si interesa el valor de verdad
+int us[2*MAXN], lw[2*MAXN], id[2*MAXN];
+stack<int> q; int qv, cp;
+void tjn(int i) {
+	lw[i] = us[i] = ++qv;
+	id[i]=-2; q.push(i);
+	for(int j = fch[i]; j!=-1; j=nch[j]) { int x = dst[j];
+		if (!us[x] || id[x] == -2) {
+			if (!us[x]) tjn(x);
+			lw[i] = min(lw[i], lw[x]);
+		}
+	}
+	if (lw[i] == us[i]) {
+		int x; do { x = q.top(); q.pop(); id[x]=cp; } while (x!=i);
+        verdad[cp] = (id[neg(i)] < 0); // Valor de verdad de variable i es verdad[id[i]]
+		cp++;
+	}
+}
+void compCon(int n) { // Tarjan algorithm
+	memset(us, 0, sizeof(us));
+	memset(id, -1, sizeof(id));
+	q=stack<int>(); qv = cp = 0;
+	forn(i, n) {
+		if (!us[i]) tjn(i);
+		if (!us[neg(i)]) tjn(neg(i));
+	}
+}
+bool satisf(int n) {
+	compCon(n);
+	forn(i, n) if (id[i] == id[neg(i)]) return false;
+	return true;
+}
+\end{code}
+\subsection{Male-optimal stable marriage problem O($N^2$)}
+\verb+gv[i][j]+ es la \textit{j}-esima mujer en orden de preferencia en la lista del varon \textit{i}. \\
+\verb+om[i][j]+ es la posici'on que ocupa el hombre \textit{j} en la lista de la mujer \textit{i}.
+\begin{code}
+#define MAXN 1000
+int gv[MAXN][MAXN],om[MAXN][MAXN]; // Inpu del algoritmo
+int pv[MAXN],pm[MAXN];             // Oupu del algoritmo
+int pun[MAXN];                     // Auxiliar
+
+void stableMarriage(int n) {
+	fill_n(pv,n,-1); fill_n(pm,n,-1); fill_n(pun,n,0);
+	int s = n, i = n-1;
+	#define engage pm[j] = i; pv[i] = j;
+	while (s) {
+		while (pv[i] == -1) {
+			int j = gv[i][pun[i]++];
+			if (pm[j] == -1) {
+				s--; engage;
+			}
+			else if (om[j][i] < om[j][pm[j]]) {
+				int loser = pm[j];
+				pv[loser] = -1;
+				engage;
+				i = loser;
+			}
+		}
+		i--; if (i < 0) i = n-1;
+} }
+\end{code}
+\subsection{Rotaciones del cubo}
+\begin{code}
+#define _ALTA {forn(h, 6) rot[p][h] = d[h]; p++;}
+#define _DER forn(h, 6) d[h] = _der[d[h]];
+#define _UP forn(h, 6) d[h] = _up[d[h]];
+
+int rot[24][6];
+const int _der[6] = {0, 2, 4, 1, 3, 5};
+const int _up[6] = {1, 5, 2, 3, 0, 4};
+
+void rotaciones() {
+	int d[6];
+	int p = 0;
+	forn(i, 6) d[i] = i;                  / \
+	forn(i, 2) {                   4 --> /   \ <-- 3
+		forn(j, 3) {                      |\ 0 /|
+			_ALTA; _DER;                    | \ / |
+			_ALTA; _DER;                    |2 | 1|
+			_ALTA; _DER;                     \ | /
+			_ALTA; _UP;                       \|/
+		}                                    ^
+		_DER; _UP; _UP;                      5
+	}
+	return;
+}
+\end{code}
+\subsection{Poker}
+\begin{code}
+usa: list, vector, map, string, algorithm, forn, tint, pint
+#define STRAIGHT_VALUE 14
+#define FLUSH_VALUE 15
+typedef pair<int,int> pint;
+typedef vector< pint > hand;
+typedef vector< int > puntaje;
+
+int cantPairs(hand& m) {
+    int pares=0;
+    forn(i,m.size()) forn(j,i) if (m[i].first == m[j].first)
+    pares++;
+    return pares;
+}
+
+int isStraight(hand& m) {
+    sort(m.begin(), m.end());
+    int ls=4;
+    if (m[4].first==14 && m[0].first==2) ls=3; //esta linea acepta escaleras desde el A
+    forn(i, ls) if (m[i].first != m[i+1].first - 1) return 0;
+    return STRAIGHT_VALUE;
+}
+
+int isFlush(hand& m) {
+    forn(i, m.size()-1) if (m[i].second != m[i+1].second) return 0;
+    return FLUSH_VALUE;
+}
+
+int gamePoints(hand& m) {
+    int f=isFlush(m),s=isStraight(m),p=cantPairs(m) * 4;
+    return max(f+s,p); //esto esta para aceptar cartas duplicadas
+}
+
+puntaje points(hand& m) {
+    puntaje r;
+    r.push_back(gamePoints(m));
+    map<int, int> c;
+    int i;
+    forn(i,m.size()) c[m[i].first]++;
+    vector<pint> cants;
+    map<int, int>::iterator it;
+    for(it = c.begin() ; it != c.end() ; ++it) {
+        cants.push_back( pint( it->second, it->first ) );
+    }
+    sort(cants.begin(), cants.end());
+    forn(i, cants.size()) {
+        r.push_back(cants[cants.size()-1-i].second);
+    }
+    //esta linea que sigue arregla la comparacion con escaleras que empiezan desde A
+    if ((r[0]==FLUSH_VALUE || r[0]==FLUSH_VALUE+STRAIGHT_VALUE) && r[1]==14 && r[2]!=13) r[1]=1;
+    return r;
+}
+tint comp(hand& m1, hand& m2) {
+  puntaje n1 = points(m1); puntaje n2 = points(m2);
+  return (n1 > n2 ? 1 : n1 == n2 ? 0 : -1);
+}
+tint convN(char c) {
+  switch(c) {
+  case 'A': return 14; case 'K': return 13; case 'Q': return 12;
+  case 'J': return 11; case 'T': return 10;
+  } return c - '0';
+}
+pint readCard() {
+  string s; cin >> s;
+  return (s == "" ? pint(-1,-1) : pint(convN(s[0]), s[1]));
+}
+hand readHand() { hand r;
+  forn(i,5) {
+    pint c = readCard();
+    if (c == pint(-1,-1)) return hand();
+    r.push_back(c);
+  } return r;
+}
+\end{code}
+\section{Extras}
+\subsection{Convex Hull en 3D}
+Le das un mar de puntos y un triangulito inicial en una cara de la convex hull.
+\begin{code}
+usa: cstdio, vector, queue, iostream, fstream, cmath
+
+const double KETO = 1e-9;
+typedef long double tdbl;
+inline tint sqr(tint a){return a*a; }
+struct pto{tint x,y,z;};
+pto point(tint x, tint y, tint z){pto r; r.x=x; r.y=y;r.z=z; return r;}
+
+pto operator - (pto a, pto b) { return point(a.x-b.x, a.y-b.y, a.z-b.z); }
+pto operator ^ (pto a, pto b) { return point(a.y*b.z-a.z*b.y,
+a.z*b.x-a.x*b.z, a.x*b.y-a.y*b.x); }
+tint operator * (pto a, pto b) { return a.x*b.x + a.y*b.y + a.z*b.z; }
+bool operator == (pto a, pto b) { return a.x==b.x && a.y==b.y && a.z==b.z; }
+tdbl len (pto a) { return sqrt(1.0*(a*a)); }
+tint len2(pto a) { return a*a; }
+ifstream in("d.in");
+ifstream out("d.out");
+#define FS first
+#define SD second
+#define MP make_pair
+bool ok[1700][1700];
+int main () {
+	int runs; in >> runs;
+	while (runs--) {
+		vector<pto> p;
+	    int x1,y1,x2,y2;
+	    in >> x1 >> y1 >> x2 >> y2;
+	    p.push_back(point(x1,y1,0)); p.push_back(point(x2,y1,0));
+      p.push_back(point(x2,y2,0)); p.push_back(point(x1,y2,0));
+		int N; in >> N;
+		tdbl area=-abs(x2-x1)*abs(y2-y1), area2;
+		if(N){
+			forn(i, N){
+			    int h; in >> x1 >> y1 >> x2 >> y2 >> h;
+			    p.push_back(point(x1,y1,h)); p.push_back(point(x2,y1,h));
+          p.push_back(point(x2,y2,h)); p.push_back(point(x1,y2,h));
+			}
+			fill(ok[0], ok[p.size()], false);
+			queue<pair<pair<int, int>, int> > q;
+			q.push(MP(MP(0,1),2));
+			while (!q.empty()) {
+				int A = q.front().FS.FS;
+				int B = q.front().FS.SD;
+				int x = q.front().SD; q.pop();
+				if (ok[A][B]) continue;
+				tdbl Ccos3D = -1e100;
+				tdbl Ccos2D = -1e100;
+				tdbl Cdist  = -1e100;
+	  			int C = -1;
+				pto n = (p[x]-p[B]) ^ (p[x]-p[A]);
+				forn(i, p.size()){
+					if (ok[B][i] || ok[i][A]) continue;
+					pto mi = (p[i]-p[A]) ^ (p[i]-p[B]);
+					if (mi.x==0&&mi.y==0&&mi.z==0) continue;
+
+					tdbl icos3D = tdbl (mi*n) / len(mi) / len(n);
+					tdbl icos2D = tdbl ((p[i]-p[B])*(p[B]-p[A])) / len(p[i]-p[B]) / len(p[B]-p[A]);
+					tdbl idist  = len(mi);
+
+					if ((icos3D>Ccos3D+KETO) ||
+					    (icos3D>Ccos3D-KETO && icos2D>Ccos2D+KETO) ||
+					    (icos3D>Ccos3D-KETO && icos2D>Ccos2D-KETO && Cdist<idist)) {
+						C = i;
+						Ccos3D = icos3D;
+						Ccos2D = icos2D;
+						Cdist  = idist;
+					}
+				}
+				ok[A][B]=ok[B][C]=ok[C][A]=true;
+				q.push(MP(MP(C,B), A));
+				q.push(MP(MP(A,C), B));
+				area += 0.5 * len((p[C]-p[A]) ^ (p[C]-p[B]));
+			}
+		}else{
+			area = -area;
+		}
+		out >> area2;
+		if(abs(area2-area)>1e-4){
+			cout << "MAL" << endl;
+		}
+	}
+	cout << "FIN" << endl;
+	return 0;
+}
+\end{code}
+\subsection{Componentes conexas en un subgrafo grilla}
+\begin{code}
+int dx[4]={0,0,-1,1}, dy[4]={-1,1,0,0};
+struct Cas{int p[4];};
+const int MAXN = 105;
+Cas c[MAXN*2][MAXN*2];
+int px, py;
+void put(int x, int y, int d, int l, int t){
+	forn(i, l){
+		if(d==0)c[x+i][y].p[0] = c[x+i][y-1].p[1] = t;
+		if(d==1)c[x][y+i].p[2] = c[x-1][y+i].p[3] = t;
+	}
+}
+void init(){
+	Cas cc; fill(cc.p, cc.p+4, 0);
+	fill(c[0], c[MAXN], cc);
+}
+\end{code}
+\subsection{Orden total de puntos alrededor de un centro}
+\begin{code}
+struct Cmp{
+	pto r;
+	Cmp(pto _r){r = _r;}
+	int cuad(const pto &a) const{
+		if(a.x > 0 && a.y >= 0)return 0;
+		if(a.x <= 0 && a.y > 0)return 1;
+		if(a.x < 0 && a.y <= 0)return 2;
+		if(a.x >= 0 && a.y < 0)return 3;
+		assert(a.x ==0 && a.y==0);
+		return -1;
+	}
+	bool cmp(const pto&p1, const pto&p2)const{
+		int c1 = cuad(p1), c2 = cuad(p2);
+		if(c1==c2){
+			return p1.y*p2.x<p1.x*p2.y;
+		}else{
+			return c1 < c2;
+		}
+	}
+	bool operator()(const pto&p1, const pto&p2) const{
+		return cmp(pto(p1.x-r.x,p1.y-r.y),pto(p2.x-r.x,p2.y-r.y));
+  }
+};
+\end{code}
+\section{El AJI es una fruta}
+\subsection{Dinitz}
+\begin{code}
+#define INF 1000000000 // Infinito de FLUJO
+#define DINF INF       // Infinito de distancia
+#define MAX_M 1000000  // Maximo de aristas
+#define MAX_N 45000    // Maximo de nodos
+int v[2*MAX_M], l[2*MAX_M];	// Vecino, link. link te tira el indice de la arista "al reves" asociada en la lista del vecino.
+long c[2*MAX_M];	// Capacidad
+int sz[MAX_N], po[MAX_N], r[MAX_N], n, S, T;
+typedef map<int,long> Mii;
+Mii CAP[MAX_N];
+void iniG() {
+	n = 0;
+	memset(sz,0,sizeof(sz));
+	forn(i,MAX_N) CAP[i].clear();
+}
+void aEje(int d,int h,long cap) {
+	if (d == h) return; // Ignoramos completamente autoejes, obvio :D
+	n = max(n,max(d,h));
+	pair<Mii::iterator,bool> par = CAP[d].insert(make_pair(h,0));
+	if (par.second) {
+		CAP[h][d] = 0;
+		sz[d]++;
+		sz[h]++;
+	}
+	par.first->second += max(cap,(long)0);
+}
+void _aEje(int d,int h,long capDH, long capHD) {
+	#define ASIG(d,h,cap) {v[po[d]] = h; c[po[d]] = cap; l[po[d]] = po[h];}
+	ASIG(d,h,capDH);
+	ASIG(h,d,capHD);
+	po[d]++; po[h]++;
+}
+void _iniG() {
+	po[0] = 0;
+	forn(i,n-1) po[i+1] = po[i] + sz[i];
+	forn(u,n) forall(v,CAP[u])
+		if (u < v->first) _aEje(u,v->first,v->second,CAP[v->first][u]);
+}
+long aumentar() {
+	// bfs
+	forn(i,n) r[i] = DINF;
+	r[T] = 0;
+    static int q[MAX_N];
+    int qf = 0, qb = 0;
+	q[qb++] = T;
+	while (qb != qf) {
+		int x = q[qf++];
+		int d = r[x] + 1, b = po[x];
+		if (r[S] < DINF) break;
+		forsn(j,b,b+sz[x])
+		if (c[l[j]]>0 && r[v[j]] == DINF) {
+			r[v[j]] = d;
+			q[qb++] = v[j];
+		}
+	}
+	// dfs que hace la magia :P
+	long res = 0;
+	static int path[MAX_N]; path[0] = S;
+	static int p[MAX_N],ind[MAX_N];
+    forn(i,n) p[i] = -1;
+	int pp = 0; // Path pointer, es la longitud
+	while (pp >= 0)	{
+		int x = path[pp];
+		if (x == T)	{ // Llegamo, hay que hacer magia. O sea, ajustar todas las capacidades a lo largo del caminito que se satura.
+			long f = INF;
+			int pri = 0;
+			dforn(i,pp)	if (c[ind[i]]<=f) f = c[ind[i]], pri = i;
+			forn(i,pp) c[ind[i]] -= f, c[l[ind[i]]] += f;
+			res += f;
+			pp = pri;
+		}
+		else if (++p[x] < sz[x]) {
+			int j = po[x]+p[x];
+			if (p[v[j]] < 0 && c[j] > 0 && r[v[j]] < r[x])
+				ind[pp] = j, path[++pp] = v[j];
+		}
+		else pp--;
+	}
+	return res;
+}
+long flujo(int ss,int tt) {
+	S = ss; T = tt;
+	n = max(n,max(S,T)) + 1; // Aca, n ya tiene el valor posta
+	_iniG();
+	forn(i,n) po[i] -= sz[i];
+	
+	long res = 0,c;
+	do {res += (c = aumentar());} while (c>0);
+	return res;
+}
+\end{code}
+\subsection{FFT}
+\begin{code}
+typedef double tipo;
+// Tipo debe ser un tipo de punto flotante
+
+struct Comp
+{
+	tipo r,i;
+	Comp() : r(0), i(0) {}
+	Comp(tipo rr) : r(rr), i(0) {}
+	Comp(tipo rr, tipo ii) : r(rr), i(ii) {}
+	Comp operator + (const Comp &o) const { return Comp(r + o.r, i + o.i); }
+	Comp operator - (const Comp &o) const {	return Comp(r - o.r, i - o.i); }
+	Comp operator * (const Comp &o) const {	return Comp(r * o.r - i * o.i,r * o.i + o.r * i); }
+	Comp & operator += (const Comp &o) { return *this = *this + o; }
+	Comp & operator *= (const Comp &o) { return *this = *this * o; }
+};
+
+#define MAXN (1<<21)	// Debe ser potencia de 2
+						// Si se esta usando convolucion, debe ser
+						// al menos 2 * n
+
+const tipo PI = 4.0 * atan(1.0);
+
+unsigned bTabla[(1<<16)]; 	// Es importante que sea unsigned para que al hacer shift right
+							// haga shift logico y no shift aritmetico.
+
+// Se llama a llenarTabla una vez al comienzo del programa.
+
+void llenarTabla()
+{
+	bTabla[0] = 0;
+	forn(i,16)
+	{
+		int s = (1<<i);
+		forn(j,s) bTabla[s + j] = (bTabla[j] *= 2)+1;
+	}
+}
+
+struct Fft
+{
+	// Tipo debe ser un tipo de punto flotante
+	int n,nk;
+	Comp v[MAXN];
+	Comp *init(int nn)
+	{
+		for(n = 1, nk = 32; n < nn; n *= 2, nk--);
+		zMem(v);
+		return v;
+	}
+	Comp *fft()
+	{
+		forn(i,n)
+		{
+			int j = (((bTabla[i&0xFFFF] << 16) | bTabla[i>>16]) >> nk);
+			if (j > i) swap(v[i],v[j]);
+		}
+		for(int i=2;i<=n; i+=2)
+		{
+			int s = 1, x = i;
+			while (x%2 == 0)
+			{
+				x /= 2;
+				Comp w1 = 1.0;
+				const Comp w(cos(PI/tipo(s)),-sin(PI/tipo(s)));
+				Comp *A = v+i-2*s, *B = v+i-s, *FIN = v+i;
+				// Cuello de botella : este for.
+				// En particular, las dos multiplicaciones.
+				for(;B != FIN;A++,B++)
+				{
+					Comp X = *A, Y = w1 * *B;
+					*A += Y;
+					*B = X - Y;
+					w1 *= w;
+				}
+				s *= 2;
+			}
+		}
+		
+		return v;
+	}
+	Comp *invfft()
+	{
+		reverse(v+1,v+n);
+		forn(i,n) v[i] *= 1.0 / tipo(n);
+		return fft();
+	}
+	// Uso:
+	// Se llama a init, se llena el vector en el puntero devuelto.
+	// Se llama a fft o a invftt, segun lo buscado.
+	// El output aparece en el puntero devuelto.
+};
+
+struct Convolucion
+{
+	// Tipo debe ser un tipo de punto flotante
+	Fft fft;
+	Comp v[MAXN]; // Se usa el MAXN de fft
+	Comp* init(int n)
+	{
+		return fft.init(2*n);
+	}
+	Comp *next()
+	{
+		fft.fft();
+		memcpy(v,fft.v,sizeof(v));
+		zMem(fft.v);
+		return fft.v;
+	}
+	Comp *conv()
+	{
+		fft.fft();
+		forn(i,fft.n)
+			fft.v[i] *= v[i];
+		return fft.invfft();
+	}
+	// Uso:
+	// Se llama a init, se llena el primer vector en el puntero devuelto.
+	// Se llama a next, se llena el segundo vector en el puntero devuelto.
+	// Se llama a conv, la convolucion aparece en el puntero devuelto.
+};
+\end{code}
+\subsection{Intersecci'on (y yerbas afines) de circulos en $O(n^3 \lg n)$}
+\begin{code}
+typedef double real; // abstraccion magica
+
+struct pto
+{
+	real x,y;
+	pto() : x(0),y(0) {}
+	pto(real xx, real yy) : x(xx),y(yy) {}
+	pto operator +(const pto &o) const { return pto(x+o.x,y+o.y); }
+	pto operator -(const pto &o) const { return pto(x-o.x,y-o.y); }
+	pto operator *(real k) const { return pto(k*x,k*y); }
+	real norma() const { return hypot(x,y); }
+	pto rotar(real alfa) const { return pto(x * cos(alfa) - y * sin(alfa), x* sin(alfa) + y * cos(alfa)); }
+};
+
+struct circ { pto c; real r; };
+
+#define sqr(x) ((x)*(x))
+
+struct event
+{
+	real x; int t; 
+	event(real xx, int tt) : x(xx), t(tt) {}
+	bool operator <(const event &o) const { return x < o.x; }
+};
+
+typedef vector<circ> VC;
+typedef vector<event> VE;
+
+real cuenta(VE &v, real A,real B)
+{
+	sort(all(v));
+	real res = 0.0, lx = ((v.empty())?0.0:v[0].x);
+	int contador = 0;
+	forn(i,v.size())
+	{
+		// Esta es la linea magica que hay que tocar.
+		// Cambiando trivialmente el if, hacemos que compute interseccion de todos (contador == n),
+		// union de todos (contador > 0), conjunto de puntos cubierto por exactamente k circulos (contador == k),
+		// etc. En este caso, le estamos pidiendo los puntos que son tocados por 1,2 o 3
+		// circulos, que es lo que queremos pal problema del robotito que tira rayitos :D
+		if (contador > 0 && contador < 4) res += v[i].x - lx;
+		contador += v[i].t;
+		lx = v[i].x;
+	}
+	return res;
+}
+
+const real PI = 4.0 * atan(1.0);
+
+// La siguiente da una primitiva de sqrt(r*r - x*x) como funcion real de una variable x.
+// Los bordes estan puestos estrategicamente para que todo ande joya :D
+inline real primitiva(real x,real r)
+{
+	if (x >= r) return r*r*PI/4.0;
+	if (x <= -r) return -r*r*PI/4.0;
+	real raiz = sqrt(r*r-x*x);
+	return 0.5 * (x * raiz + r*r*atan(x/raiz));
+}
+
+// Se llama asi pero en realidad calcula la funcion que calcule "cuenta" en base a los "intervalos" que esta le arma.
+// Puede ser interseccion, union, o incluso algunas cosas mas locas :D.
+real interCirc(const VC &v)
+{
+	vector<real> p; p.reserve(v.size() * (v.size() + 2));
+	forn(i,v.size())
+	{
+		p.push_back(v[i].c.x + v[i].r);
+		p.push_back(v[i].c.x - v[i].r);
+	}
+	forn(i,v.size())
+	forn(j,i)
+	{
+		const circ &a = v[i], b = v[j];
+		real d = (a.c - b.c).norma();
+		if (fabs(a.r - b.r) < d && d < a.r + b.r)
+		{
+			real alfa = acos((sqr(a.r) + sqr(d) - sqr(b.r)) / (2.0 * d * a.r));
+			pto vec = (b.c - a.c) * (a.r / d);
+			p.push_back((a.c + vec.rotar(alfa)).x);
+			p.push_back((a.c + vec.rotar(-alfa)).x);
+		}
+	}
+	sort(all(p));
+	real res = 0.0;
+	forn(i,p.size()-1)
+	{
+		const real A = p[i], B = p[i+1];
+		VE ve; ve.reserve(2 * v.size());
+		forn(j,v.size())
+		{
+			const circ &c = v[j];
+			real arco = primitiva(B-c.c.x,c.r) - primitiva(A-c.c.x,c.r);
+			real base = c.c.y * (B-A);
+			ve.push_back(event(base + arco,-1));
+			ve.push_back(event(base - arco, 1));
+		}
+		res += cuenta(ve,A,B);
+	}
+	return res;
+}
+\end{code}
+\subsection{Integrador numerico (simpson).}
+\begin{code}
+typedef double Funcion(double);
+double integrar(Funcion *f, double a,double b, int n)
+{
+	double h = (b-a)/(double)(n);
+	double res = 0.0;
+	double x0 = a;
+	double fx0 = f(x0);
+	const double h2 = h/2.0;
+	forn(i,n)
+	{
+		double fx0h = f(x0+h);
+		res += fx0 + fx0h + 4.0 * f(x0+h2);
+		x0 += h;
+		fx0 = fx0h;
+	}
+	return res * h / 6.0;
+}
+\end{code}
+\subsection{Componentes biconexas, puentes y puntos de articulacion by Juancito}
+\begin{code}
+// g es la lista de adyacencia de un grafo en forma vector<int>, N es cantidad de vertices,
+// MAXN es una cota superior tanto para cantidad de vertices como cantidad de aristas
+
+int D[MAXN], L[MAXN], J[MAXN], I[MAXN]; char E[MAXN];
+int P[2 * MAXN], R, S[2 * MAXN], K, A[MAXN], T;
+void component() {
+    int r = P[--R]; COMPO_START(); COMPO_V(r);
+    for (int u = P[R - 1]; u != r; u = P[--R - 1]) {
+        COMPO_V(u);
+        if (D[P[R - 2]] < D[u]) forn(i, J[u]) COMPO_EDGE(u, g[u][i]);
+    } COMPO_END();
+}
+void dfs (int r) {
+    E[r] = K = T = R = 0; A[S[K++] = r] = -1;
+    while (K) { int u = S[--K], v;
+        switch (E[u]) {
+        case 0: L[u] = D[u] = T++; J[u] = I[u] = 0; P[R++] = u;
+        case 1: c1: if (I[u] == (int)g[u].size()) break;
+            if (D[v = g[u][I[u]]] == -1) {
+                //if(u == r and I[u]) ARTICULATION(u);
+                E[A[v] = S[K++] = u] = 2, E[S[K++] = v] = 0;
+            } else { if (v != A[u] && D[v] < L[u]) L[u] = D[v];
+                if (D[v] < D[u]) swap(g[u][J[u]++], g[u][I[u]]); //COMP
+                I[u]++; E[S[K++] = u] = 1;
+            } break;
+        case 2: v = g[u][I[u]], P[R++] = u;
+            if (L[v] < L[u]) L[u] = L[v];
+            //if (L[v] >= D[u] && u != r) ARTICULATION(u);
+            //if (L[v] >= D[v]) BRIDGE(u, v);
+            if (L[v] >= D[u]) component(); //COMP
+            I[u]++; goto c1;
+        }
+    }
+}
+void BC()
+{
+    forn(i, N) D[i] = -1;
+    forn(i, N) if(D[i] == -1) dfs(i);
+}
+\end{code}
+\subsection{Rotaciones}
+Matriz de rotacion 2D:
+$$ \left[
+  \begin{array}{ c c }
+     \cos \theta & -\sin \theta \\
+     \sin \theta & \cos \theta
+  \end{array} \right]
+$$
+
+Matrices de rotacion 3D (sobre los ejes coordenados) :
+$$R_x(\theta) = \left[ 
+        \begin{array}{c c c}
+            1 & 0 & 0 \\ 
+            0 & \cos \theta & -\sin \theta \\
+            0 & \sin \theta & \cos \theta \\
+        \end{array} \right] $$ 
+        
+$$R_y(\theta) = \left[ 
+        \begin{array}{c c c}
+            \cos \theta & 0 & \sin \theta \\
+            0 & 1 & 0 \\
+            -\sin \theta & 0 & \cos \theta \\
+        \end{array} \right] $$ 
+        
+$$R_z(\theta) = \left[ 
+        \begin{array}{c c c}
+            \cos \theta & -\sin \theta & 0 \\
+            \sin \theta & \cos \theta & 0 \\
+            0 & 0 & 1 \\
+        \end{array} \right]$$
+
+Rodrigues rotation formula (rota $\mathbf{v}$ alrededor de $\mathbf{z}$ vector unitario, segun un angulo $\theta$:
+$$\mathbf{v}_\mathrm{rot} = \mathbf{v} \cos\theta + (\mathbf{z} \times \mathbf{v})\sin\theta   + \mathbf{z} (\mathbf{z} \cdot \mathbf{v}) (1 - \cos\theta)$$
+\subsection{LIS}
+\begin{code}
+// Las lineas marcadas con // Camino no son necesarias si no se desea reconstruir el camino.
+
+#define MAXN 1000000
+
+int v[MAXN]; // INPU del algoritmo.
+int mv[MAXN];
+int mi[MAXN] ,p[MAXN]; // Camino
+int l[MAXN]; // Aca apareceria la maxima subsecuencia creciente
+
+int lis(int n)
+{
+	forn(i,n) mv[i] = INF;
+	forn(i,n) mi[i] = -1; // Camino
+	forn(i,n) p [i] = -1; // Camino
+	mv[0] = -INF;
+	int res = 0;
+	forn(i,n)
+	{
+		// Con upper_bound es máxima subsecuencia no decreciente.
+		// Con lower_bound es máxima subsecuencia creciente.
+		int me = upper_bound(mv,mv+n,v[i]) - mv;
+		p[i] = mi[me-1]; // Camino
+		mv[me] = v[i];
+		mi[me] = i; // Camino
+		if (me > res) res = me;
+	}
+	for(int a = mi[res], i = res - 1;a != -1; a = p[a], i--) // Camino
+		l[i] = a; // Indices: poniendo l[i] = v[a] quedan los valores.
+	return res;
+}
+\end{code}
+\subsection{Flujo de costo minimo vale multiejes}
+\begin{code}
+// Flujo de costo minimo, con lista de incidencia y flujo,cap,costo en los ejes.
+// Se asumen costos y capacidades no negativos.
+// Se banca ejes para los dos lados entre un par de nodos.
+// SE BANCA MULTIEJES.
+// O(m * n * F), siendo F el flujo que se pasa por la red.
+#define MAXN 100
+#define MAXM 10000
+int S,T,N,M;
+Cost co[MAXM];
+Cap ca[MAXM], f[MAXM];
+int g1[MAXM], g2[MAXM];
+
+void iniG(int n,int s,int t) { N = n; S = s; T = t; M = 0; }
+void aEje(int d,int h,Cap cap, Cost cost) {
+	f[M] = 0;
+	ca[M] = cap;
+	co[M] = cost;
+	g1[M] = d;
+	g2[M] = h;
+	M++;
+}
+
+const Cost INF = 1000000000000000000LL;
+int p[MAXN];
+Cost dist[MAXN];
+inline void foo(int d,int h, Cost cost, int j, Cap mf) {
+	if (mf > 0)	{
+		Cost c = dist[d] + cost;
+		if (c < dist[h]) { dist[h] = c; p[h] = j; }
+	}
+}
+
+// camAu construye un camino aumentante de flujo a lo mas x, y pasa flujo por ahi.
+// Al finalizar la ejecucion, x se ve reducido en la cantidad de flujo que se aumento.
+// Devuelve el costo del camino en cuestion.
+// Devuelve 0 si no se envia flujo (logico)
+Cost camAu(Cap &x) {
+	// Bellman ford.
+	forn(i,N) {dist[i] =  INF; p[i] = -1;}
+	dist[S] = 0;
+	forn(i,N) forn(j,M) {
+		int d = g1[j], h = g2[j];
+		foo(d,h,co[j],j, ca[j] - f[j]);
+		foo(h,d,-co[j],j, f[j]);
+	} // aca ya tenemos computado el camino optimo para aumentar, si hay.
+	int ac = T;
+    Cap mF = x;
+	while (p[ac] != -1)	{
+		int j = p[ac];
+		if (g1[j] == ac) { ac = g2[j]; mF = min(mF,f[j]);}
+		else             { ac = g1[j]; mF = min(mF,ca[j] - f[j]); }
+	}
+	if (ac != S) return 0; // No hay camino.
+	ac = T;
+	while (p[ac] != -1) {
+		int j = p[ac];
+		if (g1[j] == ac) { ac = g2[j]; f[j] -= mF; }
+		else             { ac = g1[j]; f[j] += mF; }
+	}
+	x -= mF;
+	return mF * dist[T];
+}
+
+// flujo recibe la cantidad de flujo deseada (+inf para usar el flujo maximo).
+// al finalizar la ejecucion, f queda con la cantidad de flujo pasada (que sera el valor pedido de ser posible,
+// o bien el maximo flujo en la red sino).
+// Devuelve el costo del flujo en cuestion.
+Cost flujo(Cap &f) {
+	Cap f0 = f, lf = f;
+    Cost res = 0;
+	while (1) {
+		res += camAu(f);
+		if (f == lf || f == 0) break;
+		lf = f;
+	}
+	f = f0 - f;
+	return res;
+}
+\end{code}
+\subsection{Dual simple (dual sobre cada componente conexa)}
+\begin{code}
+// Usa : pto (resta), Orden total de puntos alrededor de un centro.
+#define MAXN 1100
+#define MAXM 6500
+
+int m; // Cantidad de ejes
+pto nodos[MAXN]; // nodos[i] es la coordenada del nodo i. INPU
+int ea[2*MAXM],eb[2*MAXM]; // Cada eje va de ea[i] a eb[i]
+
+void ginit() { m = 0; } // Funciones de entrada
+void aEje(int a,int b) { ea[m] = a; eb[m++] = b;
+                         ea[m] = b; eb[m++] = a;}
+                         
+int indi[2*MAXM]; // Indice del eje en la lista de adyacencia de a (nodo de partida)
+vint g[MAXN]; // g : listas de adyacencia (dan los EJES que inciden en cada nodo).
+int compo[MAXN]; // Componente conexa de cada vertice.
+
+int reg[2*MAXM]; // Region que toca cada arista OUPU
+vint dejes[MAXM]; // Lista de ejes de una region (caminando con mano izquierda en la pared) OUPU
+
+Cmp micompa = Cmp(pto());
+bool micmp(int e1, int e2) { return micompa(nodos[eb[e1]], nodos[eb[e2]]);}
+bool mimen(pto a, pto b) { if (a.y != b.y) return a.y < b.y; return a.x < b.x; }
+int tReg;
+void workReg(int i) {
+    dejes[tReg].clear();
+    int ej = i;
+    do {dejes[tReg].push_back(ej);
+        reg[ej] = tReg;
+        ej = g[eb[ej]][(indi[ej^1]+1) % g[eb[ej]].size()]; }
+    while (ej != i);
+    tReg++;
+}
+// Le pasas la cantidad de nodos y una variable donde te deja cant de comp. conexas
+// Devuelve la cantidad de vertices del dual (regiones en el grafo original).
+// En el grafo construido, las regiones 0..c-1 son las regiones exteriores de cada componente conexa.
+// Nota que en realidad construye varios duales, uno por cada componente conexa.
+// Si es conexo da el dual del grafo, sino da un grafo con tatas componentes como el original, y tal que
+// cada componente es el dual de la correspondiente.
+int buildDual(int n,int &c) {
+    // Prepara el embedding para la otra parte
+    forn(i,n) g[i].clear();
+    forn(i,m) g[ea[i]].push_back(i);
+    forn(i,n){
+        micompa.r = nodos[i];
+        sort(all(g[i]),micmp);
+    }
+    forn(i,n) forn(j,g[i].size()) indi[g[i][j]] = j;
+    forn(i,m) reg[i] = -1;
+    // Encuentra la region externa de cada dual
+    forn(i,n) compo[i] = -1;
+    tReg = 0; c = 0;
+    forn(i,n)
+    if (compo[i] == -1) {
+        int menor = i;
+        compo[i] = c;
+        queue<int> q;
+        q.push(i);
+        while (!q.empty()){
+            int x = q.front(); q.pop();
+            if (mimen(nodos[x], nodos[menor])) menor = x;
+            forall(ej,g[x]) {
+                int y = eb[*ej];
+                if (compo[y] == -1) {
+                    compo[y] = c;
+                    q.push(y);
+        } } }
+        c++;
+        if (g[menor].empty()) dejes[tReg++].clear();
+        else workReg(*g[menor].begin());
+    }
+    // Encuentra las demas regiones
+    forn(i,m) if (reg[i] == -1) workReg(i);
+    return tReg;
+}
+// EJEMPLO DE RECORRIDO DE LAS ARISTAS EN EL DUAL
+// forn(i,tReg) forall(ej,dejes[i]) ARISTA_EN_EL_DUAL(i,reg[*ej^1]);
+\end{code}
+\subsection{Dual full}
+\begin{code}
+// usa: point in poly, area de un poligono
+VP regPol[MAXM]; // Poligono que define el borde EXTERNO de una region (indefinido en la cara externa final)
+                 // (dejes va a contener tambien los ejes en la frontera "interior")
+// Luego de llamar a buildDual, llamas a este con el c que te dieron
+// Te devuelve un N: El nuevo dual tiene vertices [c,N). [0,c) son basura.
+// La unica cara externa tiene numero N-1
+int buildFullDual(int c) {
+    forn(i,tReg) { // Construccion de los poligonos
+        regPol[i] = VP(dejes[i].size());
+        forn(j,dejes[i].size())
+            regPol[i][j] = nodos[ea[dejes[i][j]]];
+    } // Ahora si el full dual
+    dejes[tReg].clear();
+    forn(i,c)
+    if (!dejes[i].empty()) {
+        int mejor = tReg;
+        tint mar = AREA_INF;
+        pto p = nodos[ea[dejes[i][0]]];
+        forsn(j,c,tReg)
+        if (compo[ea[dejes[j][0]]] != i) {
+            if (pnpoly(regPol[j],p)) {
+                tint ar = areaPor2(regPol[j]);
+                if (ar < mar) {
+                    mejor = j;
+                    mar = ar;
+        } } }
+        // Enchufar la region i a la mejor
+        forall(ej,dejes[i]) {
+            reg[*ej] = mejor;
+            dejes[mejor].push_back(*ej);
+        }
+    }
+    return ++tReg;
+}
+\end{code}
+\subsection{LCA}
+\begin{code}
+// La cantidad maxima de vertices n debe ser menor que 2^(LVL-1).
+#define LVL 18
+#define MAXN (1<<LVL)
+int d[MAXN];
+
+bool fcmp(int a,int b) { return d[a] < d[b];}
+
+int vec[LVL][MAXN];
+int mn(int i, int j) { // intervalo [i,j)
+	int p = 31-__builtin_clz(j-i);
+	return min(vec[p][i],vec[p][j-(1<<p)],fcmp);
+}
+void mn_init(int n) {
+	int mp = 31-__builtin_clz(n);
+	forn(p, mp) forn(x, n-(1<<p)) vec[p+1][x] = min(vec[p][x], vec[p][x+(1<<p)],fcmp);
+}
+
+vector<int> t[MAXN]; // Tree
+int pos[MAXN];
+int id, pp;
+
+void dfs(int x) {
+	d[x] = id++;
+	vec[0][pos[x] = pp++] = x;
+	forall(y,t[x])
+	if (d[*y] == -1) {
+		dfs(*y);
+		vec[0][pp++] = x;
+	}
+}
+
+void lcaInit(int n,int raiz) {
+	id = pp = 0;
+	memset(d,-1,sizeof(d));
+	dfs(raiz);
+	mn_init(2*n-1);
+}
+
+int lca(int i,int j) {
+	int a = pos[i], b = pos[j];
+	if (a > b) swap(a,b);
+	return mn(a,b+1);
+}
+\end{code}
+\subsection{Interseccion semiplano-poligono convexo O(n)}
+\begin{code}
+// Usa: pto (con doubles) (+ - , producto cruz ^, producto por un escalar *, ==)
+const double EPS = 1e-9;
+pto irs(pto a,pto b,pto p0, pto p1) {
+    #define onr(p) (fabs((b-a)^(p-a)) < EPS)
+    if (onr(p1)) return p1;
+    if (onr(p0)) return p0;
+    return p0 + (p1-p0) * (((a-p0)^(b-a)) / ((p1-p0)^(b-a)));
+}
+// Parado en a, mirando hacia b, interseca el semiplano de la izquierda con el poligono convexo p
+// Un VP vacio representa el conjunto vacio.
+VP cortar(const VP &p, pto a, pto b) {
+    #define inside(p) (((b-a)^(p-a)) >= -EPS)
+    int n = p.size();
+    VP res; if (n==0) return p;
+    int in = inside(p[n-1]);
+    for (int i=0,j=n-1;i<n;j=i++) {
+        int nin = inside(p[i]);
+        if (nin != in) {
+            in = nin;
+            res.push_back(irs(a,b,p[j],p[i]));
+        }
+        if (in) res.push_back(p[i]);
+    }
+    res.resize(unique(all(res)) - res.begin());
+    while (res.size() > 1 && res.back() == res.front()) res.pop_back();
+    return res;
+}
+\end{code}
+\subsection{Distancia punto-triangulo en 3D}
+\begin{code}
+struct pto
+{
+    tipo x, y, z;
+    pto() : x(0), y(0), z(0) {}
+    pto(tipo x0, tipo y0, tipo z0) : x(x0), y(y0), z(z0) {}
+    pto(const pto& p) : x(p.x), y(p.y), z(p.z) {}
+    pto operator + (pto& p) { return pto(x + p.x, y + p.y, z + p.z); }
+    pto operator - (pto& p) { return pto(x - p.x, y - p.y, z - p.z); }
+    tipo operator * (pto& p) { return x * p.x + y * p.y + z * p.z; }
+    pto operator * (tipo a) { return pto(x * a, y * a, z * a); }
+    tipo norma2() { return x * x + y * y + z * z; }
+    tipo dis2(pto& p) { return sqr(x - p.x) + sqr(y - p.y) + sqr(z - p.z); }
+};
+inline tipo dis2(pto p1, pto p2){ return p1.dis2(p2); }
+
+/**
+ * tengo a, b, c y quiero proyectar c en a + (b - a) * t
+ * resto a a todo:
+ * tengo b - a, c - a y quiero proyectar c - a en (b - a) * t
+ * es (b - a) * ((c - a) * (b - a)) / ((b - a) * (b - a))
+ * es la misma cuenta de antes
+ */
+
+tipo dis2puntosegmento(pto a, pto b, pto c)
+{
+    pto ba = b - a, ca = c - a, bc = b - c;
+    tipo t = (ca * ba) / (ba * ba);
+    if(0 <= t and t <= 1) {
+        pto proy = ba * t;
+        pto normal = ca - proy;
+        return normal.norma2();
+    }
+    else return min(dis2(a, c), dis2(b, c));
+}
+
+tipo dis2rectarecta(pto a, pto b, pto c, pto d)
+{
+    tipo res = dis2puntosegmento(a, b, c);
+    tipo a11 = ba * ba, a12 = -(dc * ba), a21 = ba * dc, a22 = -(dc * dc);
+    tipo det = a11 * a22 - a12 * a21;
+    if(zero(det)) return res;
+    swap(a11, a22); a12 = -a12; a21 = -a21;
+    tipo t1 = (a11 * (ca * ba) + a12 * (ca * dc)) / det;
+    tipo t2 = (a21 * (ca * ba) + a22 * (ca * dc)) / det;
+    ba = ba * t1, dc = dc * t2;
+    return dis2(ba, ca + dc);
+}
+
+tipo dis2segseg(pto a, pto b, pto c, pto d)
+{
+    tipo res = INF;
+    res = min(res, dis2puntosegmento(a, b, c));
+    res = min(res, dis2puntosegmento(a, b, d));
+    res = min(res, dis2puntosegmento(c, d, a));
+    res = min(res, dis2puntosegmento(c, d, b));
+    
+    pto ba = b - a, dc = d - c, ca = c - a;
+    tipo a11 = ba * ba, a12 = -(dc * ba), a21 = ba * dc, a22 = -(dc * dc);
+    tipo det = a11 * a22 - a12 * a21;
+    if(zero(det)) return res;
+    else
+    {
+        swap(a11, a22); a12 = -a12; a21 = -a21;
+        tipo t1 = (a11 * (ca * ba) + a12 * (ca * dc)) / det;
+        tipo t2 = (a21 * (ca * ba) + a22 * (ca * dc)) / det;
+        if(0 <= t1 and t1 <= 1 and 0 <= t2 and t2 <= 1)
+        {
+            ba = ba * t1, dc = dc * t2;
+            return min(res, dis2(ba, ca + dc));
+        }
+        else return res;
+    }
+}
+
+/**
+ * tengo un triángulo a, b, c y un punto x
+ * quiero ver la distancia mínima de x en (a, b, c)
+ * si es la proyección
+ */
+
+tipo mindis2puntotrialgulo(pto a, pto b, pto c, pto x)
+{
+    pto ba = b - a, ca = c - a, xa = x - a, caba = ca - ba;
+    tipo a11 = ba * ba, a12 = ba * caba, a21 = ba * caba, a22 = caba * caba;
+    tipo det = a11 * a22 - a12 * a21;
+    if(zero(det)) return INF;
+    else
+    {
+        swap(a11, a22); a12 = -a12; a21 = -a21;
+        tipo t1 = (a11 * (xa * ba) + a12 * (xa * caba)) / det;
+        tipo t2 = (a21 * (xa * ba) + a22 * (xa * caba)) / det;
+        if(0 <= t2 and t2 <= t1 and t1 <= 1)
+        {
+            ba = ba * t1; caba = caba * t2;
+            return dis2(xa, ba + caba);
+        }
+        else return INF;
+    }
+}
+\end{code}
+\subsection{Algoritmo de Duval}
+    Dada una string $s$ devuelve la Lyndon decomposition en tiempo lineal usando el algoritmo de Duval.
+    Factoriza $s$ como $s_1 s_2 \ldots s_k$ con $s_1 \geqq s_2 \geqq \cdots \geqq s_k$ y tal que $s_i$ es Lyndon, esto es, es su menor rotación.
+\begin{code}
+void duval(char* s) {   
+    int i = 0, n = strlen(s), j, k;
+    while (i < n) {
+        j = i + 1, k = i;
+        while (j < n and s[k] <= s[j]) {
+            if(s[k] < s[j]) k = i; else k++; j++; }
+        while (i <= k) {
+        		LYNDON(i, i + j - k); i += j - k; }}}
+\end{code}
+\noindent Obtener la mínima rotación de $s$: en la descomposición de Lyndon de $s^2$ es el último $i<|s|$ con el que empieza una Lyndon.\\
+\noindent Dada una string s devuelve un array m[0:n] tal que m[i] contine el mínimo sufijo de s[0:i+1].
+\begin{code}
+void minimumSuffixArray (char* s, int* res) {
+    int i = 0, n = strlen(s), j, k;
+    while (i < n) {
+        j = i + 1; k = i; res[i] = i;
+        while (j < n and s[k] <= s[j]) {
+            if (s[k] < s[j]) res[j] = k = i;
+            else res[j] = j - k + res[k], k++; j++; }
+        while (i <= k) i += j - k; }}
+\end{code}
+\noindent Dada una string s devuelve un array m[0:n] tal que m[i] contine el máximo sufijo de s[0:i+1].
+\begin{code}
+void maximumSuffixArray (char* s, int* res) {
+    int i = 0, n = strlen(s), j, k; forn(l, n) res[l] = -1;
+    while (i < n) {
+        j = i + 1; k = i;
+        if (res[i] == -1) res[i] = i;
+        while (j < n and s[k] >= s[j]) {
+            if (s[k] > s[j]) k = i; else k++;
+            if (res[j] == -1) res[j] = i; j++; }
+        while (i <= k) i += j - k; }}
+\end{code}
+\end{document}
